@@ -96,7 +96,12 @@ public class FXMLController implements Initializable {
             Stage stage = new Stage();
             log.debug("showDialog");
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));         
+            Parent root = loader.load();
+            
+            UpdIncidentController contr1 = loader.getController();
+            
             stage.setTitle("Новый инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -307,11 +312,14 @@ public class FXMLController implements Initializable {
             Stage stage = new Stage();
             log.debug(" showAddIncidentForm()");
             log.debug("URL = " + getClass().getResource("/fxml/updIncident.fxml"));
-            FXMLLoader loader = new FXMLLoader();
-            Parent root = loader.load(getClass().getResource("/fxml/updIncident.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/updIncident.fxml"));
+            Parent root = loader.load();
             UpdIncidentController contr1 = loader.getController();
             log.debug(contr1);
-            contr1.setIncident(parentInc);
+            //contr1.setIncident(parentInc);
+            
+            contr1.initFormField(parentInc);
+            
             stage.setTitle("Редактировать инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);

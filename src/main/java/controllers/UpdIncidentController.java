@@ -111,10 +111,15 @@ public class UpdIncidentController implements Initializable {
         return serviceList;
     }
 
+    public void initFormField(tIncident inc){
+        log.info("initFormField -> " + inc.toString());
+        idTFComment.setText(inc.getFComment());
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        log.info("initialize -> " + url);
+        //log.info("initialize -> " + incident.toString());
         try {
             idDPFDate.setValue(NOW_LOCAL_DATE());
             idCBFirm.getItems().addAll(getFirmList());
