@@ -41,6 +41,7 @@ public class UpdIncidentController implements Initializable {
      * Initializes the controller class.
      */
     private final Logger log = Logger.getLogger(UpdIncidentController.class);
+    private tIncident incident;
 
     @FXML
     DatePicker idDPFDate;
@@ -124,6 +125,14 @@ public class UpdIncidentController implements Initializable {
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    public tIncident getIncident() {
+        return incident;
+    }
+
+    public void setIncident(tIncident incident) {
+        this.incident = incident;
     }
 
 }

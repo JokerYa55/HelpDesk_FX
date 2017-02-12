@@ -5,6 +5,7 @@ import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentDAO;
 import beans.sprIncidentStatus;
 import beans.tIncident;
+import controllers.UpdIncidentController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -242,7 +243,8 @@ public class FXMLController implements Initializable {
                     @Override
                     public void handle(MouseEvent event) {
                        log.info(incident);
-                       showUpdIncidentForm(((Node)event.getSource()).getScene().getWindow());
+                       //((Node)event.getSource()).
+                       showUpdIncidentForm(((Node)event.getSource()).getScene().getWindow(), incident);
                     }
                 });
                 hBox.getChildren().add(btnEdit);
@@ -300,12 +302,16 @@ public class FXMLController implements Initializable {
     }
 
     // Вызов формы добавления инцидента
-    private void showUpdIncidentForm(javafx.stage.Window parentWnd) {
+    private void showUpdIncidentForm(javafx.stage.Window parentWnd, tIncident parentInc) {
         try {
             Stage stage = new Stage();
             log.debug(" showAddIncidentForm()");
             log.debug("URL = " + getClass().getResource("/fxml/updIncident.fxml"));
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/updIncident.fxml")); 
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(getClass().getResource("/fxml/updIncident.fxml"));
+            UpdIncidentController contr1 = loader.getController();
+            log.debug(contr1);
+            contr1.setIncident(parentInc);
             stage.setTitle("Редактировать инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
