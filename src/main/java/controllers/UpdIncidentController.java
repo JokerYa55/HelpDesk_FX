@@ -121,6 +121,7 @@ public class UpdIncidentController implements Initializable {
         // TODO
         //log.info("initialize -> " + incident.toString());
         try {
+            
             idDPFDate.setValue(NOW_LOCAL_DATE());
             idCBFirm.getItems().addAll(getFirmList());
             idCBService.getItems().addAll(getServiceList());
