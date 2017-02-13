@@ -29,6 +29,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import org.apache.log4j.Logger;
 import static util.utils.NOW_LOCAL_DATE;
+import static util.utils.getLocalDate;
 
 /**
  * FXML Controller class
@@ -90,6 +91,10 @@ public class UpdIncidentController implements Initializable {
     @FXML
     public void btnUpdClick(ActionEvent actionEvent) {
         log.info("btnUpdClick -> " + actionEvent);
+        tIncident inc = new tIncident();
+        inc.setFComment(idTFComment.getText());
+        inc.setFDate(idDPFDate.getValue());
+        (new tIncidentDAO()).updateItem(inc);
         
     }
 
@@ -114,6 +119,10 @@ public class UpdIncidentController implements Initializable {
     public void initFormField(tIncident inc){
         log.info("initFormField -> " + inc.toString());
         idTFComment.setText(inc.getFComment());
+        idCBFirm.setValue(new sprFirm(inc.getFFirmId(), inc.getFFirmName()));
+        idCBService.setValue(new sprService(inc.getFServiceId(), inc.getFServiceName()));
+        idDPDateCreated.setValue(getLocalDate(inc.getFDateCreated()));
+        idTFUser.setText(inc.getFUserName());
     }
     
     @Override
