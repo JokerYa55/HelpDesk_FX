@@ -12,10 +12,17 @@
     <children>
         <ToolBar layoutY="25.0" prefHeight="50.0" prefWidth="1240.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
             <items>
-                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonAction" prefHeight="55.0" prefWidth="55.0" text="Обновить">
+                <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonAction" prefHeight="55.0" prefWidth="55.0">
                     <tooltip>
                         <Tooltip text="Обновить" />
-                    </tooltip>
+                    </tooltip>                    
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="/icons/Flat_Icons_10.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>         
                 </Button>
                 <Button fx:id="idButtonNew" mnemonicParsing="false" onAction="#newIncidentButtonAction" prefHeight="55.0" prefWidth="55.0"> 
                     <tooltip>
@@ -27,8 +34,7 @@
                                 <Image url="/icons/Flat_Icons_21.png" />
                             </image>
                         </ImageView>
-                    </graphic>
-                                    
+                    </graphic>                                    
                 </Button>
                 <ImageView fitHeight="45.0" fitWidth="172.0" pickOnBounds="true" preserveRatio="true" />
             </items>
