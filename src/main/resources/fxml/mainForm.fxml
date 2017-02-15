@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,11 +9,14 @@
 
 <AnchorPane id="AnchorPane" prefHeight="891.0" prefWidth="1240.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="helpdesk.FXMLController">
    <children>
-      <ToolBar layoutY="25.0" prefHeight="32.0" prefWidth="859.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+      <ToolBar layoutY="25.0" prefHeight="50.0" prefWidth="1240.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
         <items>
-          <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonAction" text="Обновить" />
-            <Button fx:id="idButtonNew" mnemonicParsing="false" onAction="#newIncidentButtonAction" text="Новый" />
+          <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonAction" prefHeight="55.0" prefWidth="55.0" text="Обновить" />
+            <Button fx:id="idButtonNew" mnemonicParsing="false" onAction="#newIncidentButtonAction" prefHeight="55.0" prefWidth="55.0" text="Новый" />
         </items>
+         <effect>
+            <Blend />
+         </effect>
       </ToolBar>
       <MenuBar layoutX="356.0" layoutY="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -33,7 +37,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <SplitPane dividerPositions="0.29797979797979796" layoutX="230.0" layoutY="60.0" prefHeight="536.0" prefWidth="859.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+      <SplitPane dividerPositions="0.29797979797979796" layoutX="230.0" layoutY="60.0" prefHeight="536.0" prefWidth="859.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
