@@ -30,7 +30,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import org.apache.log4j.Logger;
-import util.utils;
 import static util.utils.NOW_LOCAL_DATE;
 import static util.utils.getLocalDate;
 
@@ -152,12 +151,12 @@ public class UpdIncidentController implements Initializable {
         }
     }
 
-    public tIncident getIncident() {
-        return incident;
-    }
-
-    public void setIncident(tIncident incident) {
-        this.incident = incident;
-    }
+//    public tIncident getIncident() {
+//        return incident;
+//    }
+//
+//    public void setIncident(tIncident incident) {
+//        this.incident = incident;
+//    }
 
 }
