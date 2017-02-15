@@ -6,9 +6,11 @@ package controllers;
  * and open the template in the editor.
  */
 import DAO.sprFirmDAO;
+import DAO.sprIncidentStatusDAO;
 import DAO.sprServiceDAO;
 import DAO.tIncidentDAO;
 import beans.sprFirm;
+import beans.sprIncidentStatus;
 import beans.sprService;
 import beans.tIncident;
 import java.net.URL;
@@ -28,6 +30,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import org.apache.log4j.Logger;
+import util.utils;
 import static util.utils.NOW_LOCAL_DATE;
 import static util.utils.getLocalDate;
 
@@ -42,7 +45,7 @@ public class UpdIncidentController implements Initializable {
      * Initializes the controller class.
      */
     private final Logger log = Logger.getLogger(UpdIncidentController.class);
-    private tIncident incident;
+    private tIncident incident = null;
 
     @FXML
     DatePicker idDPFDate;
@@ -69,9 +72,12 @@ public class UpdIncidentController implements Initializable {
     Button idBtnCancel;
 
     @FXML
-    public void btnSaveClick(ActionEvent actionEvent) {
+    ComboBox idCBIncidentStatus;
+
+    @FXML
+    public void btnUpdClick(ActionEvent actionEvent) {
         // Нажатие на кнопку сохранить
-        log.info("btnSaveClick -> " + actionEvent);
+        log.info("btnUpdClick -> " + actionEvent);        
         tIncident item = new tIncident();
         item.setFComment(idTFComment.getText());
 
@@ -83,19 +89,12 @@ public class UpdIncidentController implements Initializable {
         item.setFServiceId(((sprService) idCBService.getSelectionModel().getSelectedItem()).getId());
         item.setFComment(idTFComment.getText());
         item.setFDateCreated(date);
-        //item.setFUserId(((sprUser) ));
+        item.setFIncidentStatusId(((sprIncidentStatus) idCBIncidentStatus.getValue()).getId());
+        item.setId(incident.getId());
+        item.setFUserId(incident.getFUserId());
         log.info(item.toString());
-        (new tIncidentDAO()).addItem(item);
-    }
+        (new tIncidentDAO()).updateItem(item);
 
-    @FXML
-    public void btnUpdClick(ActionEvent actionEvent) {
-        log.info("btnUpdClick -> " + actionEvent);
-        tIncident inc = new tIncident();
-        inc.setFComment(idTFComment.getText());
-        inc.setFDate(idDPFDate.getValue());
-        (new tIncidentDAO()).updateItem(inc);
-        
     }
 
     private ObservableList<sprFirm> getFirmList() {
@@ -116,27 +115,38 @@ public class UpdIncidentController implements Initializable {
         return serviceList;
     }
 
-    public void initFormField(tIncident inc){
+    private ObservableList<sprIncidentStatus> getStatusList() {
+        ObservableList<sprIncidentStatus> statusList = FXCollections.observableArrayList();
+        List<sprIncidentStatus> tList = (new sprIncidentStatusDAO().getItemList());
+        tList.forEach((item) -> {
+            statusList.add(item);
+        });
+        return statusList;
+    }
+
+    public void initFormField(tIncident inc) {
+        this.incident = inc;
         log.info("initFormField -> " + inc.toString());
         idTFComment.setText(inc.getFComment());
         idCBFirm.setValue(new sprFirm(inc.getFFirmId(), inc.getFFirmName()));
         idCBService.setValue(new sprService(inc.getFServiceId(), inc.getFServiceName()));
         idDPDateCreated.setValue(getLocalDate(inc.getFDateCreated()));
         idTFUser.setText(inc.getFUserName());
+        idDPFDate.setValue(getLocalDate(inc.getFDate()));
+        idCBIncidentStatus.setValue(new sprIncidentStatus(inc.getFIncidentStatusId(), inc.getFIncidentStatusName()));
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        //log.info("initialize -> " + incident.toString());
         try {
-            
+            log.info("initialize -> ");
             idDPFDate.setValue(NOW_LOCAL_DATE());
             idCBFirm.getItems().addAll(getFirmList());
             idCBService.getItems().addAll(getServiceList());
             idDPDateCreated.setValue(NOW_LOCAL_DATE());
             idTFUser.setText("Test");
-
+            idCBIncidentStatus.getItems().addAll(getStatusList());
         } catch (Exception e) {
             log.error(e);
         }

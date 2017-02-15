@@ -191,6 +191,7 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
         boolean flag = false;
         try {
             int rows = this.jdЬcTemplate.update("DELETE FROM t_incident t WHERE t.id = ?", new Object[]{Item.getId()});
+            log.info("Обновлено строк : " + rows);
             flag = true;            
         } catch (Exception e) {
             log.error(e);
@@ -200,7 +201,30 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
     
     @Override
     public boolean updateItem(tIncident Item) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        log.info("Обновляем элемент -> " + Item);
+        boolean flag = false;
+        try {
+            int rows = this.jdЬcTemplate.update("UPDATE t_incident "
+                    + "SET f_date=?, "
+                    + "f_firm_id=?, "
+                    + "f_service_id=?, "
+                    + "f_comment=?, "
+                    + "f_date_created=?, " 
+                    + "f_user_id=?, "
+                    + "f_incident_status_id=? "
+                    + "WHERE id = ?", new Object[]{Item.getFDate(),
+                                                     Item.getFFirmId(),
+                                                     Item.getFServiceId(),
+                                                     Item.getFComment(),
+                                                     Item.getFDateCreated(),
+                                                     Item.getFUserId(),
+                                                     Item.getFIncidentStatusId(),
+                                                     Item.getId()});
+            flag = true;            
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return flag;
     }
     
 }

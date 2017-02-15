@@ -1,3 +1,8 @@
 .button {
     -fx-font-weight: bold;
+    -fx-font: sans-serif;
 }
+
+/*#idButtonNew {
+    -fx-background-image: url("/icons/Flat_Icons_21.png");
+}*/
