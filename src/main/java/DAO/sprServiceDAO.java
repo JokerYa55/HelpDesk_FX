@@ -24,7 +24,7 @@ public class sprServiceDAO implements beanDAOInterface<sprService, Long> {
     private JdbcTemplate jdЬcTemplate;
 
     public sprServiceDAO() {
-        this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://localhost:5432/service_desk", "postgres", "123");
+        this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "postgres", "123");
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
     }
 

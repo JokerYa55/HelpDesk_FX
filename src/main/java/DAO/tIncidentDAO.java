@@ -32,7 +32,7 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
     private JdbcTemplate jdЬcTemplate;
     
     public tIncidentDAO() {
-        this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://localhost:5432/service_desk", "postgres", "123");
+        this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "postgres", "123");
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
     }
     
@@ -73,8 +73,7 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
                     + "  t.f_firm_id = t1.id AND\n"
                     + "  t.f_service_id = t_spr_service.id AND\n"
                     + "  t.f_user_id = t_spr_users.id AND\n"
-                    + "  t.f_incident_status_id = t_spr_incident_status.id\n"
-                    + "  t."
+                    + "  t.f_incident_status_id = t_spr_incident_status.id\n"                    
                     + "ORDER BY\n"
                     + "  t.f_date DESC;",
                     (ResultSet rs, int rowNum) -> new tIncident(rs.getLong("id"),
