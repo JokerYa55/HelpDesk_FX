@@ -23,12 +23,16 @@ public class sprFirmDAO implements beanDAOInterface<sprFirm, Long> {
     private DataSource dataSource;
     private JdbcTemplate jdЬcTemplate;
 
-    
-     public sprFirmDAO() {
+    public sprFirmDAO() {
         this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "postgres", "123");
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
     }
-    
+
+    public sprFirmDAO(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.jdЬcTemplate = new JdbcTemplate(dataSource);
+    }
+
     @Override
     public sprFirm getItemById(Long id) {
         sprFirm res = null;

@@ -28,6 +28,11 @@ public class sprIncidentStatusDAO implements beanDAOInterface<sprIncidentStatus,
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public sprIncidentStatusDAO(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.jdЬcTemplate = new JdbcTemplate(dataSource);
+    }
+
     @Override
     public sprIncidentStatus getItemById(Long id) {
         try {

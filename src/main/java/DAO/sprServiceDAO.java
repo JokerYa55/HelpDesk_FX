@@ -28,6 +28,11 @@ public class sprServiceDAO implements beanDAOInterface<sprService, Long> {
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public sprServiceDAO(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.jdЬcTemplate = new JdbcTemplate(dataSource);
+    }
+
     @Override
     public sprService getItemById(Long id) {
         sprService res = null;

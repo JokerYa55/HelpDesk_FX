@@ -16,6 +16,8 @@ public class MainApp extends Application {
     private Logger log = Logger.getLogger(MainApp.class);
     private Parent root;
     private Scene scene;
+    private String userName;
+    private String userPass;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -28,7 +30,7 @@ public class MainApp extends Application {
         stage.setScene(scene);
         //stage.setMaximized(true);
         stage.show();
-        //showDialog();
+        showDialog();
     }
 
     
@@ -37,10 +39,11 @@ public class MainApp extends Application {
             Stage stage = new Stage();
             log.debug("showDialog");
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
-            FXMLLoader loader = new FXMLLoader();
-            Parent root = loader.load(getClass().getResource("/fxml/login.fxml"));
-            //LoginFormFXMLController controller = loader.getController();
-            //controller.setMain(this);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent root = loader.load();
+            LoginFormFXMLController control = loader.getController();
+            log.info(control);
+            control.setMain(this);
             stage.setTitle("Вход");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -65,5 +68,13 @@ public class MainApp extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserPass(String userPass) {
+        this.userPass = userPass;
     }
 }
