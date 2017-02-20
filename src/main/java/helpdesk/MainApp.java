@@ -1,5 +1,6 @@
 package helpdesk;
 
+import beans.sprUser;
 import controllers.LoginFormFXMLController;
 import java.io.IOException;
 import javafx.application.Application;
@@ -20,6 +21,7 @@ public class MainApp extends Application {
     private String userName;
     private String userPass;
     private DataSource dataSource;
+    private sprUser currentUser;
 
     @Override
     public void start(Stage stage) throws Exception {
