@@ -9,32 +9,37 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 public class MainApp extends Application {
 
-    private Logger log = Logger.getLogger(MainApp.class);
+    private final Logger log = Logger.getLogger(MainApp.class);
     private Parent root;
     private Scene scene;
     private String userName;
     private String userPass;
+    private DataSource dataSource;
 
     @Override
     public void start(Stage stage) throws Exception {
         log.debug("start");
-        FXMLLoader loader = new FXMLLoader();
-        root = FXMLLoader.load(getClass().getResource("/fxml/mainForm.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainForm.fxml"));
+        root = loader.load();
+        FXMLController mainFormController = loader.getController();
         scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setTitle("HelpDesk v. 1.0");
         stage.setScene(scene);
         //stage.setMaximized(true);
         stage.show();
-        showDialog();
+        showLoginDialog();
+        mainFormController.setDataSource(dataSource);
+        mainFormController.refreshForm();
     }
 
     
-     public void showDialog() {
+     public void showLoginDialog() {
         try {
             Stage stage = new Stage();
             log.debug("showDialog");
@@ -51,8 +56,9 @@ public class MainApp extends Application {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(scene.getWindow());
-            stage.show();
-
+            stage.showAndWait();
+            this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", this.userName, this.userPass);
+            log.debug(this.dataSource);
         } catch (IOException e) {
             e.printStackTrace();
         }

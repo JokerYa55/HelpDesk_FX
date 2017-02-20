@@ -37,13 +37,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.getLocalDate;
 
 public class FXMLController implements Initializable {
 
     private final Logger log = Logger.getLogger(FXMLController.class);
+    private DataSource dataSource;
 
     @FXML
     private Label label;
@@ -116,7 +117,7 @@ public class FXMLController implements Initializable {
         }
     }
 
-    private void refreshForm() {
+    public void refreshForm() {
         refreshTree();
         refreshIncidentList(null);
     }
@@ -125,7 +126,7 @@ public class FXMLController implements Initializable {
         try {
             log.info("refreshTree()");
             //idTreeView.getRoot().getChildren().clear();
-            List<sprIncidentStatus> itemList = (new sprIncidentStatusDAO()).getItemList();
+            List<sprIncidentStatus> itemList = (new sprIncidentStatusDAO(dataSource)).getItemList();
             TreeItem<sprIncidentStatus> rootItem = new TreeItem(null);
             rootItem.setExpanded(true);
             for (sprIncidentStatus item : itemList) {
@@ -155,9 +156,9 @@ public class FXMLController implements Initializable {
             idAccordion.getPanes().clear();
             List<tIncident> incedentList = null;
             if (id == null) {
-                incedentList = (new tIncidentDAO()).getItemList();
+                incedentList = (new tIncidentDAO(dataSource)).getItemList();
             } else {
-                incedentList = (new tIncidentDAO()).getItemListByStatus(id.getId());
+                incedentList = (new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
             }
             for (tIncident incident : incedentList) {
                 // создаем панель с информацией об инциденте
@@ -337,7 +338,11 @@ public class FXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        refreshForm();
+        //refreshForm();
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }
 
