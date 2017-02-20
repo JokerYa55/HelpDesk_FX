@@ -15,6 +15,17 @@ public class sprUser {
     private String password;
     private String name;
 
+    public sprUser(Long Id, String login, String password, String name) {
+        this.Id = Id;
+        this.login = login;
+        this.password = password;
+        this.name = name;
+    }
+
+    public sprUser() {
+        
+    }
+    
     public Long getId() {
         return Id;
     }

@@ -1,5 +1,6 @@
 package helpdesk;
 
+import DAO.sprUsersDAO;
 import beans.sprUser;
 import controllers.LoginFormFXMLController;
 import java.io.IOException;
@@ -22,13 +23,14 @@ public class MainApp extends Application {
     private String userPass;
     private DataSource dataSource;
     private sprUser currentUser;
+    private FXMLController mainFormController;
 
     @Override
     public void start(Stage stage) throws Exception {
         log.debug("start");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainForm.fxml"));
         root = loader.load();
-        FXMLController mainFormController = loader.getController();
+        this.mainFormController = loader.getController();
         scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setTitle("HelpDesk v. 1.0");
@@ -36,8 +38,8 @@ public class MainApp extends Application {
         //stage.setMaximized(true);
         stage.show();
         showLoginDialog();
-        mainFormController.setDataSource(dataSource);
-        mainFormController.refreshForm();
+        this.mainFormController.setDataSource(dataSource);
+        this.mainFormController.refreshForm();
     }
 
     
@@ -61,6 +63,11 @@ public class MainApp extends Application {
             stage.showAndWait();
             this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", this.userName, this.userPass);
             log.debug(this.dataSource);
+            this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
+            
+            // Получаем текущего пользователя
+            this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
+            this.mainFormController.setStatusPanelUser(this.currentUser.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }

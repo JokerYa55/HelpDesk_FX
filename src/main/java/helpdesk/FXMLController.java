@@ -50,6 +50,9 @@ public class FXMLController implements Initializable {
     private Label label;
 
     @FXML
+    private Label idLUserName;
+
+    @FXML
     private MenuItem idMainMenuExit;
 
     @FXML
@@ -97,12 +100,12 @@ public class FXMLController implements Initializable {
             Stage stage = new Stage();
             log.debug("showDialog");
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));         
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loader.load();
-            
+
             UpdIncidentController contr1 = loader.getController();
-            
+
             stage.setTitle("Новый инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -115,6 +118,10 @@ public class FXMLController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setStatusPanelUser(String userName) {
+        idLUserName.setText(userName);
     }
 
     public void refreshForm() {
@@ -248,9 +255,9 @@ public class FXMLController implements Initializable {
                 btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                       log.info(incident);
-                       //((Node)event.getSource()).
-                       showUpdIncidentForm(((Node)event.getSource()).getScene().getWindow(), incident);
+                        log.info(incident);
+                        //((Node)event.getSource()).
+                        showUpdIncidentForm(((Node) event.getSource()).getScene().getWindow(), incident);
                     }
                 });
                 hBox.getChildren().add(btnEdit);
@@ -318,9 +325,9 @@ public class FXMLController implements Initializable {
             UpdIncidentController contr1 = loader.getController();
             log.debug(contr1);
             //contr1.setIncident(parentInc);
-            
+
             contr1.initFormField(parentInc);
-            
+
             stage.setTitle("Редактировать инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -345,4 +352,3 @@ public class FXMLController implements Initializable {
         this.dataSource = dataSource;
     }
 }
-
