@@ -38,6 +38,7 @@ public class MainApp extends Application {
         //stage.setMaximized(true);
         stage.show();
         showLoginDialog();
+        mainFormController.setCurrentUser(currentUser);
         this.mainFormController.setDataSource(dataSource);
         this.mainFormController.refreshForm();
     }

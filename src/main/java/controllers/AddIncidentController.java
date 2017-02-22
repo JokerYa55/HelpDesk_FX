@@ -10,6 +10,7 @@ import DAO.sprServiceDAO;
 import DAO.tIncidentDAO;
 import beans.sprFirm;
 import beans.sprService;
+import beans.sprUser;
 import beans.tIncident;
 import java.net.URL;
 import java.time.Instant;
@@ -27,6 +28,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.NOW_LOCAL_DATE;
 
@@ -41,7 +44,10 @@ public class AddIncidentController implements Initializable {
      * Initializes the controller class.
      */
     private final Logger log = Logger.getLogger(AddIncidentController.class);
-    
+    private Stage dialogStage;
+    private sprUser currentUser;
+    private DataSource dataSource;
+
     @FXML
     DatePicker idDPFDate;
 
@@ -72,23 +78,32 @@ public class AddIncidentController implements Initializable {
         log.info("btnSaveClick -> " + actionEvent);
         tIncident item = new tIncident();
         item.setFComment(idTFComment.getText());
-        
+
         LocalDate localDate = idDPFDate.getValue();
         Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
         Date date = Date.from(instant);
         item.setFDate(date);
-        item.setFFirmId(((sprFirm)idCBFirm.getSelectionModel().getSelectedItem()).getId());
-        item.setFServiceId(((sprService)idCBService.getSelectionModel().getSelectedItem()).getId());
+        item.setFFirmId(((sprFirm) idCBFirm.getSelectionModel().getSelectedItem()).getId());
+        item.setFServiceId(((sprService) idCBService.getSelectionModel().getSelectedItem()).getId());
         item.setFComment(idTFComment.getText());
         item.setFDateCreated(date);
-        //item.setFUserId(((sprUser) ));
+        item.setFUserId(currentUser.getId());
+        item.setFIncidentStatusId(new Long(1));
         log.info(item.toString());
-        (new tIncidentDAO()).addItem(item);
+        (new tIncidentDAO(dataSource)).addItem(item);
+        this.dialogStage.close();
+    }
+
+    @FXML
+    public void btnCancelClick(ActionEvent actionEvent) {
+        // Нажатие на кнопку сохранить
+        log.info("btnCancelClick -> " + actionEvent);
+        this.dialogStage.close();
     }
 
     private ObservableList<sprFirm> getFirmList() {
         ObservableList<sprFirm> firmList = FXCollections.observableArrayList();
-        List<sprFirm> tList = (new sprFirmDAO().getItemList());
+        List<sprFirm> tList = (new sprFirmDAO(dataSource).getItemList());
         tList.forEach((item) -> {
             firmList.add(item);
         });
@@ -97,7 +112,7 @@ public class AddIncidentController implements Initializable {
 
     private ObservableList<sprService> getServiceList() {
         ObservableList<sprService> serviceList = FXCollections.observableArrayList();
-        List<sprService> tList = (new sprServiceDAO().getItemList());
+        List<sprService> tList = (new sprServiceDAO(dataSource).getItemList());
         tList.forEach((item) -> {
             serviceList.add(item);
         });
@@ -118,6 +133,18 @@ public class AddIncidentController implements Initializable {
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    public void setCurrentUser(sprUser currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
 }

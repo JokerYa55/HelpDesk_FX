@@ -31,10 +31,10 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
     private DataSource dataSource;
     private JdbcTemplate jdЬcTemplate;
 
-    public tIncidentDAO() {
+    /*public tIncidentDAO() {
         this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "postgres", "123");
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
-    }
+    }*/
 
     public tIncidentDAO(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -174,8 +174,8 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
                     ps.setLong(3, Item.getFServiceId());
                     ps.setString(4, Item.getFComment());
                     ps.setDate(5, new Date(Item.getFDateCreated().getTime()));
-                    ps.setLong(6, 1);
-                    ps.setLong(7, 1);
+                    ps.setLong(6, Item.getFUserId());
+                    ps.setLong(7, Item.getFIncidentStatusId());
                     return ps;
                 }
             }, generatedKeyHolder);

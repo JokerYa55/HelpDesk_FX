@@ -23,10 +23,10 @@ public class sprIncidentStatusDAO implements beanDAOInterface<sprIncidentStatus,
     private DataSource dataSource;
     private JdbcTemplate jdЬcTemplate;
 
-    public sprIncidentStatusDAO() {
+    /*public sprIncidentStatusDAO() {
         this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "postgres", "123");
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
-    }
+    }*/
 
     public sprIncidentStatusDAO(DataSource dataSource) {
         this.dataSource = dataSource;

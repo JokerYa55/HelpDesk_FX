@@ -6,14 +6,13 @@
 package DAO;
 
 import beans.sprFirm;
-import java.util.List;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -22,6 +21,7 @@ import static org.junit.Assert.*;
 public class sprFirmDAOTest {
 
     private final Logger log = Logger.getLogger(sprFirmDAOTest.class);
+    private DataSource dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "vasil", "123");
 
     public sprFirmDAOTest() {
     }
@@ -63,7 +63,7 @@ public class sprFirmDAOTest {
     @Test
     public void testGetItemList_0args() {
         log.info("getItemList");
-        sprFirmDAO instance = new sprFirmDAO();
+        sprFirmDAO instance = new sprFirmDAO(dataSource);
 //        List<sprFirm> expResult = null;
 //        List<sprFirm> result = instance.getItemList();
         //assertEquals(expResult, result);
@@ -79,7 +79,7 @@ public class sprFirmDAOTest {
         log.info("getItemList");
         Long startIndex = null;
         Long itemCount = null;
-        sprFirmDAO instance = new sprFirmDAO();
+        sprFirmDAO instance = new sprFirmDAO(dataSource);
 //        List<sprFirm> expResult = null;
 //        List<sprFirm> result = instance.getItemList(startIndex, itemCount);
         //assertEquals(expResult, result);
@@ -94,7 +94,7 @@ public class sprFirmDAOTest {
     public void testAddItem() {
         log.info("addItem");
         sprFirm Item = null;
-        sprFirmDAO instance = new sprFirmDAO();
+        sprFirmDAO instance = new sprFirmDAO(dataSource);
 //        long expResult = 0L;
 //        long result = instance.addItem(Item);
         //assertEquals(expResult, result);
@@ -109,7 +109,7 @@ public class sprFirmDAOTest {
     public void testDeleteItem() {
         log.info("deleteItem");
         sprFirm Item = null;
-        sprFirmDAO instance = new sprFirmDAO();
+        sprFirmDAO instance = new sprFirmDAO(dataSource);
         boolean expResult = false;
 //        boolean result = instance.deleteItem(Item);
 //        assertEquals(expResult, result);
@@ -124,7 +124,7 @@ public class sprFirmDAOTest {
     public void testUpdateItem() {
         log.info("updateItem");
         sprFirm Item = null;
-        sprFirmDAO instance = new sprFirmDAO();
+        sprFirmDAO instance = new sprFirmDAO(dataSource);
         boolean expResult = false;
 //        boolean result = instance.updateItem(Item);
 //        assertEquals(expResult, result);

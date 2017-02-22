@@ -12,6 +12,7 @@ import DAO.tIncidentDAO;
 import beans.sprFirm;
 import beans.sprIncidentStatus;
 import beans.sprService;
+import beans.sprUser;
 import beans.tIncident;
 import java.net.URL;
 import java.time.Instant;
@@ -29,6 +30,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.NOW_LOCAL_DATE;
 import static util.utils.getLocalDate;
@@ -45,6 +48,9 @@ public class UpdIncidentController implements Initializable {
      */
     private final Logger log = Logger.getLogger(UpdIncidentController.class);
     private tIncident incident = null;
+    private Stage dialogStage;
+    private sprUser currentUser;
+    private DataSource dataSource;
 
     @FXML
     DatePicker idDPFDate;
@@ -92,13 +98,13 @@ public class UpdIncidentController implements Initializable {
         item.setId(incident.getId());
         item.setFUserId(incident.getFUserId());
         log.info(item.toString());
-        (new tIncidentDAO()).updateItem(item);
-
+        (new tIncidentDAO(dataSource)).updateItem(item);
+        dialogStage.close();
     }
 
     private ObservableList<sprFirm> getFirmList() {
         ObservableList<sprFirm> firmList = FXCollections.observableArrayList();
-        List<sprFirm> tList = (new sprFirmDAO().getItemList());
+        List<sprFirm> tList = (new sprFirmDAO(dataSource).getItemList());
         tList.forEach((item) -> {
             firmList.add(item);
         });
@@ -107,7 +113,7 @@ public class UpdIncidentController implements Initializable {
 
     private ObservableList<sprService> getServiceList() {
         ObservableList<sprService> serviceList = FXCollections.observableArrayList();
-        List<sprService> tList = (new sprServiceDAO().getItemList());
+        List<sprService> tList = (new sprServiceDAO(dataSource).getItemList());
         tList.forEach((item) -> {
             serviceList.add(item);
         });
@@ -116,7 +122,7 @@ public class UpdIncidentController implements Initializable {
 
     private ObservableList<sprIncidentStatus> getStatusList() {
         ObservableList<sprIncidentStatus> statusList = FXCollections.observableArrayList();
-        List<sprIncidentStatus> tList = (new sprIncidentStatusDAO().getItemList());
+        List<sprIncidentStatus> tList = (new sprIncidentStatusDAO(dataSource).getItemList());
         tList.forEach((item) -> {
             statusList.add(item);
         });
@@ -151,12 +157,16 @@ public class UpdIncidentController implements Initializable {
         }
     }
 
-//    public tIncident getIncident() {
-//        return incident;
-//    }
-//
-//    public void setIncident(tIncident incident) {
-//        this.incident = incident;
-//    }
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    public sprUser getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(sprUser currentUser) {
+        this.currentUser = currentUser;
+    }
 
 }
