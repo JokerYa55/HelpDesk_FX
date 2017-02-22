@@ -50,7 +50,7 @@ public class MainApp extends Application {
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loader.load();
-            LoginFormFXMLController control = loader.getController();
+            LoginFormFXMLController control = loader.getController();             
             log.info(control);
             control.setMain(this);
             stage.setTitle("Вход");
