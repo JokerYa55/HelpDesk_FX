@@ -54,6 +54,17 @@
                         <MenuItem mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Справочники">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#showSprFirmForm" text="Справочник фирм" />
+                  <MenuItem mnemonicParsing="false" text="Справочник клиентов" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Отчеты">
+              <items>
+                <MenuItem fx:id="idMIRepInc" mnemonicParsing="false" onAction="#handleMainMenuRepInc" text="Инциденты" />
+              </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem fx:id="idMIAbout" mnemonicParsing="false" onAction="#handleMainMenuAbout" text="About" />

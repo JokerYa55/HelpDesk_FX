@@ -7,9 +7,9 @@ import beans.sprIncidentStatus;
 import beans.sprUser;
 import beans.tIncident;
 import controllers.AddIncidentController;
+import controllers.SprFirmController;
 import controllers.UpdIncidentController;
 import interfaces.controllerInterface;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +70,9 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     TreeView<sprIncidentStatus> idTreeView;
+    
+    @FXML
+    private MenuItem idMIRepInc;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -95,6 +98,12 @@ public class FXMLController implements Initializable, controllerInterface {
         System.exit(0);
     }
 
+    @FXML
+    private void handleMainMenuRepInc(ActionEvent event) {
+        log.info(event);
+        //System.exit(0);
+    }
+    
     @FXML
     private void handleMainMenuAbout(ActionEvent event) {
         log.info("About");
@@ -388,6 +397,36 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
+     // Вызов формы справочника фирм
+    @FXML
+    private void showSprFirmForm(ActionEvent actionEvent) {
+        try {
+            Stage stage = new Stage();
+            log.debug("showSprFirmForm");
+            log.debug("URL = " + getClass().getResource("/fxml/sprFirm.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sprFirm.fxml"));
+            Parent root = loader.load();
+            SprFirmController control = loader.getController();
+            stage.setTitle("Справочник фирм");
+            stage.setMinHeight(150);
+            stage.setMinWidth(300);
+            stage.setResizable(false);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.WINDOW_MODAL);
+            //stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+            control.setDialogStage(stage);
+            control.setCurrentUser(currentUser);
+            control.setDataSource(dataSource);
+            control.setDialogStage(stage);
+            control.initForm();
+            stage.show();
+
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

@@ -127,10 +127,12 @@ public class AddIncidentController implements Initializable, controllerInterface
 
     }
 
+    @Override
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
 
+    @Override
     public void setCurrentUser(sprUser currentUser) {
         this.currentUser = currentUser;
     }
