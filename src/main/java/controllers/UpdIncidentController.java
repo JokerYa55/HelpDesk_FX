@@ -14,6 +14,7 @@ import beans.sprIncidentStatus;
 import beans.sprService;
 import beans.sprUser;
 import beans.tIncident;
+import interfaces.controllerInterface;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -41,7 +42,7 @@ import static util.utils.getLocalDate;
  *
  * @author vasil
  */
-public class UpdIncidentController implements Initializable {
+public class UpdIncidentController implements Initializable, controllerInterface {
 
     /**
      * Initializes the controller class.
@@ -82,7 +83,7 @@ public class UpdIncidentController implements Initializable {
     @FXML
     public void btnUpdClick(ActionEvent actionEvent) {
         // Нажатие на кнопку сохранить
-        log.info("btnUpdClick -> " + actionEvent);        
+        log.info("btnUpdClick -> " + actionEvent);
         tIncident item = new tIncident();
         item.setFComment(idTFComment.getText());
 
@@ -144,6 +145,30 @@ public class UpdIncidentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+    }
+
+    public sprUser getCurrentUser() {
+        return currentUser;
+    }
+
+    @Override
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    @Override
+    public void setCurrentUser(sprUser currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public void initForm() {
         try {
             log.info("initialize -> ");
             idDPFDate.setValue(NOW_LOCAL_DATE());
@@ -155,18 +180,6 @@ public class UpdIncidentController implements Initializable {
         } catch (Exception e) {
             log.error(e);
         }
-    }
-
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
-
-    public sprUser getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(sprUser currentUser) {
-        this.currentUser = currentUser;
     }
 
 }

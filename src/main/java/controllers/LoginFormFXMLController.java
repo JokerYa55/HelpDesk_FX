@@ -5,7 +5,9 @@
  */
 package controllers;
 
+import beans.sprUser;
 import helpdesk.MainApp;
+import interfaces.controllerInterface;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -18,19 +20,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.sql.DataSource;
+import org.apache.log4j.Logger;
 
 /**
  * FXML Controller class
  *
  * @author vasil
  */
-public class LoginFormFXMLController implements Initializable {
+public class LoginFormFXMLController implements Initializable, controllerInterface {
 
     /**
      * Initializes the controller class.
      */
     public MainApp main;
     private Stage dialogStage;
+    private DataSource dataSource;
+    private sprUser currentUser;
+    private final Logger log = Logger.getLogger(LoginFormFXMLController.class);
 
     @FXML
     Button btnClose;
@@ -92,8 +99,24 @@ public class LoginFormFXMLController implements Initializable {
         return dialogStage;
     }
 
+    @Override
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public void setCurrentUser(sprUser currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    @Override
+    public void initForm() {
+        log.debug("initForm");
     }
 
 }

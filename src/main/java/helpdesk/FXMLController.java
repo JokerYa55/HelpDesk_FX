@@ -8,12 +8,12 @@ import beans.sprUser;
 import beans.tIncident;
 import controllers.AddIncidentController;
 import controllers.UpdIncidentController;
+import interfaces.controllerInterface;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -46,11 +46,12 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.getLocalDate;
 
-public class FXMLController implements Initializable {
+public class FXMLController implements Initializable, controllerInterface {
 
     private final Logger log = Logger.getLogger(FXMLController.class);
     private DataSource dataSource;
     private sprUser currentUser;
+    private Stage dialogStage;
 
     @FXML
     private Label label;
@@ -121,8 +122,8 @@ public class FXMLController implements Initializable {
             stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
             stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
@@ -345,9 +346,12 @@ public class FXMLController implements Initializable {
             stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
             control.setDialogStage(stage);
             control.setCurrentUser(currentUser);
+            control.setDataSource(dataSource);
+            control.setDialogStage(stage);
+            control.initForm();
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
@@ -372,27 +376,42 @@ public class FXMLController implements Initializable {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(parentWnd);
-            
+
             contr1.setDialogStage(stage);
             contr1.setCurrentUser(currentUser);
+            contr1.setDataSource(dataSource);
+            contr1.initForm();
             stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        idTreeView.getStyleClass().add("my-tree-view");
+        log.debug("initialize");
     }
 
+    @Override
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+    @Override
     public void setCurrentUser(sprUser currentUser) {
         this.currentUser = currentUser;
+    }
+
+    @Override
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    @Override
+    public void initForm() {
+        log.debug("initForm");
+        idTreeView.getStyleClass().add("my-tree-view");
     }
 }

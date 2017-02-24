@@ -12,6 +12,7 @@ import beans.sprFirm;
 import beans.sprService;
 import beans.sprUser;
 import beans.tIncident;
+import interfaces.controllerInterface;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -38,7 +39,7 @@ import static util.utils.NOW_LOCAL_DATE;
  *
  * @author vasil
  */
-public class AddIncidentController implements Initializable {
+public class AddIncidentController implements Initializable, controllerInterface {
 
     /**
      * Initializes the controller class.
@@ -123,16 +124,7 @@ public class AddIncidentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         log.info("initialize -> " + url);
-        try {
-            idDPFDate.setValue(NOW_LOCAL_DATE());
-            idCBFirm.getItems().addAll(getFirmList());
-            idCBService.getItems().addAll(getServiceList());
-            idDPDateCreated.setValue(NOW_LOCAL_DATE());
-            idTFUser.setText("Test");
 
-        } catch (Exception e) {
-            log.error(e);
-        }
     }
 
     public void setDialogStage(Stage dialogStage) {
@@ -143,8 +135,22 @@ public class AddIncidentController implements Initializable {
         this.currentUser = currentUser;
     }
 
+    @Override
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    @Override
+    public void initForm() {
+        try {
+            idDPFDate.setValue(NOW_LOCAL_DATE());
+            idCBFirm.getItems().addAll(getFirmList());
+            idCBService.getItems().addAll(getServiceList());
+            idDPDateCreated.setValue(NOW_LOCAL_DATE());
+            idTFUser.setText("Test");
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
 }
