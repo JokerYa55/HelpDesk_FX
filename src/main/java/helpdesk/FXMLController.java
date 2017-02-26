@@ -72,13 +72,12 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     TreeView<sprIncidentStatus> idTreeView;
-    
+
     @FXML
     private MenuItem idMIRepInc;
-    
+
     @FXML
     private MenuBar idMBMainMenu;
-    
 
 //    @FXML
 //    private void handleButtonAction(ActionEvent event) {
@@ -86,7 +85,6 @@ public class FXMLController implements Initializable, controllerInterface {
 //        label.setText("Hello World!");
 //        (new sprFirmDAO(dataSource)).getItemById(Long.MIN_VALUE);
 //    }
-
     @FXML
     private void newIncidentButtonAction(ActionEvent event) {
         log.info("newIncidentButtonAction -> " + event.toString());
@@ -108,7 +106,7 @@ public class FXMLController implements Initializable, controllerInterface {
     private void handleMainMenuRepInc(ActionEvent event) {
         log.info(event);
     }
-    
+
     @FXML
     private void handleMainMenuAbout(ActionEvent event) {
         log.info("About");
@@ -141,8 +139,6 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
-    
-
     public void refreshForm() {
         refreshTree();
         refreshIncidentList(null);
@@ -174,28 +170,17 @@ public class FXMLController implements Initializable, controllerInterface {
 
             idTreeView.setRoot(rootItem);
 
-            idTreeView.setOnMousePressed(
-                    new EventHandler<MouseEvent>() {
+            idTreeView.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
-                public void handle(MouseEvent event
-                ) {
+                public void handle(MouseEvent event) {
                     log.debug(event);
-                    //log.debug(idTreeView.getSelectionModel().getSelectedItem().getValue());
-                    /*ImageView imV = new ImageView(new Image(getClass().getResourceAsStream("/icons/open_mono.png")));
-                    imV.setFitHeight(16);
-                    imV.setFitWidth(16);
-                    idTreeView.getSelectionModel().getSelectedItem().setGraphic(imV);*/
-                    //idTreeView.getSelectionModel().getSelectedItem().
-                    //log.debug(idTreeView.getControlCssMetaData());
-
                     if (idTreeView.getSelectionModel().getSelectedItem().getValue() instanceof sprIncidentStatus) {
                         refreshIncidentList(idTreeView.getSelectionModel().getSelectedItem().getValue());
                     } else {
                         refreshIncidentList(null);
                     }
                 }
-            }
-            );
+            });
         } catch (Exception e) {
             log.error(e);
         }
@@ -369,7 +354,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
     // Вызов формы добавления инцидента
     private void showUpdIncidentForm(javafx.stage.Window parentWnd, tIncident parentInc) {
-        try {            
+        try {
             log.debug(" showAddIncidentForm()");
             log.debug("URL = " + getClass().getResource("/fxml/updIncident.fxml"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/updIncident.fxml"));
@@ -398,12 +383,12 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
-     // Вызов формы справочника фирм
+    // Вызов формы справочника фирм
     @FXML
     private void showSprFirmForm(ActionEvent actionEvent) {
         try {
             Stage stage = new Stage();
-            log.debug("showSprFirmForm");           
+            log.debug("showSprFirmForm");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sprFirm.fxml"));
             Parent root = loader.load();
             SprFirmController control = loader.getController();
@@ -425,8 +410,7 @@ public class FXMLController implements Initializable, controllerInterface {
             log.error(e);
         }
     }
-    
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -441,7 +425,7 @@ public class FXMLController implements Initializable, controllerInterface {
     public void setStatusPanelUser(String userName) {
         idLUserName.setText(userName);
     }
-    
+
     @Override
     public void setCurrentUser(sprUser currentUser) {
         this.currentUser = currentUser;

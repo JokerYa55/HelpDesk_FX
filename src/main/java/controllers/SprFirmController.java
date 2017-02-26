@@ -5,15 +5,22 @@
  */
 package controllers;
 
+import DAO.sprFirmDAO;
+import beans.sprFirm;
 import beans.sprUser;
 import interfaces.controllerInterface;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
@@ -34,7 +41,13 @@ public class SprFirmController implements Initializable, controllerInterface {
     private DataSource dataSource;
 
     @FXML
-    TableView idTVMainData;
+    TableView<sprFirm> idTVMainData;
+
+    @FXML
+    TableColumn<sprFirm, Long> idTCId;
+
+    @FXML
+    TableColumn<sprFirm, String> idTCFirmName;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -65,8 +78,16 @@ public class SprFirmController implements Initializable, controllerInterface {
 
     @Override
     public void initForm() {
-        log.debug("initForm()");
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            log.debug("initForm()");
+            List<sprFirm> listItem = (new sprFirmDAO(dataSource)).getItemList();
+            ObservableList<sprFirm> sprFirmList = FXCollections.observableArrayList(listItem);
+            idTCId.setCellValueFactory(new PropertyValueFactory<>("Id"));
+            idTCFirmName.setCellValueFactory(new PropertyValueFactory<>("Name"));
+            idTVMainData.setItems(sprFirmList);
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
 }
