@@ -22,11 +22,14 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -34,6 +37,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
+import util.formLocator;
 import static util.utils.NOW_LOCAL_DATE;
 import static util.utils.getLocalDate;
 
@@ -145,7 +149,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
+
     }
 
     public sprUser getCurrentUser() {
@@ -181,5 +185,18 @@ public class UpdIncidentController implements Initializable, controllerInterface
             log.error(e);
         }
     }
+
+//    @Override
+//    public formLocator showDialog(DataSource dataSource, Stage stage, Parent root, String windowCaption) {
+//        try (formLocator res = new formLocator()) {
+//            
+//            
+//            
+//            return res;
+//        } catch (Exception ex) {
+//            log.error(ex);
+//        }
+//        return null;
+//    }
 
 }

@@ -18,7 +18,7 @@ public class MainApp extends Application {
 
     private final Logger log = Logger.getLogger(MainApp.class);
     private Parent root;
-    private Scene scene;
+    private Scene sceneMain;
     private String userName;
     private String userPass;
     private DataSource dataSource;
@@ -31,27 +31,27 @@ public class MainApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainForm.fxml"));
         root = loader.load();
         this.mainFormController = loader.getController();
-        scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
+
+        this.sceneMain = new Scene(root);
+        this.sceneMain.getStylesheets().add("/styles/Styles.css");
         stage.setTitle("HelpDesk v. 1.0");
-        stage.setScene(scene);
-        //stage.setMaximized(true);
+        stage.setScene(this.sceneMain);
+        stage.setMaximized(true);
         stage.show();
         showLoginDialog();
-        mainFormController.setCurrentUser(currentUser);
+        this.mainFormController.setCurrentUser(currentUser);
         this.mainFormController.setDataSource(dataSource);
         this.mainFormController.refreshForm();
     }
 
-    
-     public void showLoginDialog() {
+    public void showLoginDialog() {
         try {
             Stage stage = new Stage();
             log.debug("showDialog");
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loader.load();
-            LoginFormFXMLController control = loader.getController();             
+            LoginFormFXMLController control = loader.getController();
             log.info(control);
             control.setMain(this);
             stage.setTitle("Вход");
@@ -60,20 +60,20 @@ public class MainApp extends Application {
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(scene.getWindow());
+            stage.initOwner(sceneMain.getWindow());
             stage.showAndWait();
             this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", this.userName, this.userPass);
             log.debug(this.dataSource);
             this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
-            
+
             // Получаем текущего пользователя
             this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
             this.mainFormController.setStatusPanelUser(this.currentUser.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
-     }
-    
+    }
+
     /**
      * The main() method is ignored in correctly deployed JavaFX application.
      * main() serves only as fallback in case the application can not be

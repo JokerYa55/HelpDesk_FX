@@ -29,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -42,6 +43,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.getLocalDate;
@@ -73,13 +75,17 @@ public class FXMLController implements Initializable, controllerInterface {
     
     @FXML
     private MenuItem idMIRepInc;
-
+    
     @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-        (new sprFirmDAO(dataSource)).getItemById(Long.MIN_VALUE);
-    }
+    private MenuBar idMBMainMenu;
+    
+
+//    @FXML
+//    private void handleButtonAction(ActionEvent event) {
+//        System.out.println("You clicked me!");
+//        label.setText("Hello World!");
+//        (new sprFirmDAO(dataSource)).getItemById(Long.MIN_VALUE);
+//    }
 
     @FXML
     private void newIncidentButtonAction(ActionEvent event) {
@@ -101,7 +107,6 @@ public class FXMLController implements Initializable, controllerInterface {
     @FXML
     private void handleMainMenuRepInc(ActionEvent event) {
         log.info(event);
-        //System.exit(0);
     }
     
     @FXML
@@ -136,9 +141,7 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
-    public void setStatusPanelUser(String userName) {
-        idLUserName.setText(userName);
-    }
+    
 
     public void refreshForm() {
         refreshTree();
@@ -366,18 +369,16 @@ public class FXMLController implements Initializable, controllerInterface {
 
     // Вызов формы добавления инцидента
     private void showUpdIncidentForm(javafx.stage.Window parentWnd, tIncident parentInc) {
-        try {
-            Stage stage = new Stage();
+        try {            
             log.debug(" showAddIncidentForm()");
             log.debug("URL = " + getClass().getResource("/fxml/updIncident.fxml"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/updIncident.fxml"));
             Parent root = loader.load();
             UpdIncidentController contr1 = loader.getController();
             log.debug(contr1);
-            //contr1.setIncident(parentInc);
 
             contr1.initFormField(parentInc);
-
+            Stage stage = new Stage();
             stage.setTitle("Редактировать инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -402,8 +403,7 @@ public class FXMLController implements Initializable, controllerInterface {
     private void showSprFirmForm(ActionEvent actionEvent) {
         try {
             Stage stage = new Stage();
-            log.debug("showSprFirmForm");
-            log.debug("URL = " + getClass().getResource("/fxml/sprFirm.fxml"));
+            log.debug("showSprFirmForm");           
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sprFirm.fxml"));
             Parent root = loader.load();
             SprFirmController control = loader.getController();
@@ -413,7 +413,7 @@ public class FXMLController implements Initializable, controllerInterface {
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
-            //stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+            stage.initOwner(idMBMainMenu.getScene().getWindow());
             control.setDialogStage(stage);
             control.setCurrentUser(currentUser);
             control.setDataSource(dataSource);
@@ -438,6 +438,10 @@ public class FXMLController implements Initializable, controllerInterface {
         this.dataSource = dataSource;
     }
 
+    public void setStatusPanelUser(String userName) {
+        idLUserName.setText(userName);
+    }
+    
     @Override
     public void setCurrentUser(sprUser currentUser) {
         this.currentUser = currentUser;
@@ -453,4 +457,18 @@ public class FXMLController implements Initializable, controllerInterface {
         log.debug("initForm");
         idTreeView.getStyleClass().add("my-tree-view");
     }
+
+    /**
+     *
+     * @param dataSource
+     * @param stage
+     * @param root
+     * @param windowCaption
+     * @return
+     */
+//    @Override
+//    public Scene showDialog(DataSource dataSource, Stage stage, Parent root, String windowCaption) {
+//        
+//        return null;
+//    }
 }

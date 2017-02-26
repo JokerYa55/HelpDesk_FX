@@ -6,8 +6,11 @@
 package interfaces;
 
 import beans.sprUser;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
+import util.formLocator;
 
 /**
  *
@@ -22,4 +25,6 @@ public interface controllerInterface {
     public void setCurrentUser(sprUser currentUser);
     
     public void initForm();
+    
+    //public formLocator showDialog(DataSource dataSource, Stage stage, Parent root, String windowCaption);
 }
