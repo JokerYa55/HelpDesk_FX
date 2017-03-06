@@ -8,6 +8,7 @@ import beans.sprUser;
 import beans.tIncident;
 import controllers.AddIncidentController;
 import controllers.SprFirmController;
+import controllers.SprServiceController;
 import controllers.UpdIncidentController;
 import interfaces.controllerInterface;
 import java.net.URL;
@@ -411,6 +412,34 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
+    // Вызов формы справочника фирм
+    @FXML
+    private void showSprServiceForm(ActionEvent actionEvent) {
+        try {
+            Stage stage = new Stage();
+            log.debug("showSprServiceForm");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sprService.fxml"));
+            Parent root = loader.load();
+            SprServiceController control = loader.getController();
+            stage.setTitle("Справочник услуг");
+            stage.setMinHeight(150);
+            stage.setMinWidth(300);
+            stage.setResizable(false);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(idMBMainMenu.getScene().getWindow());
+            control.setDialogStage(stage);
+            control.setCurrentUser(currentUser);
+            control.setDataSource(dataSource);
+            control.setDialogStage(stage);
+            control.initForm();
+            stage.show();
+
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -442,17 +471,4 @@ public class FXMLController implements Initializable, controllerInterface {
         idTreeView.getStyleClass().add("my-tree-view");
     }
 
-    /**
-     *
-     * @param dataSource
-     * @param stage
-     * @param root
-     * @param windowCaption
-     * @return
-     */
-//    @Override
-//    public Scene showDialog(DataSource dataSource, Stage stage, Parent root, String windowCaption) {
-//        
-//        return null;
-//    }
 }

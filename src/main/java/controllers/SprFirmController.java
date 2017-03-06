@@ -11,15 +11,19 @@ import beans.sprUser;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
@@ -90,4 +94,24 @@ public class SprFirmController implements Initializable, controllerInterface {
         }
     }
 
+    @FXML
+    private void btnAddClick(ActionEvent actionEvent) {
+        try {
+            log.debug(actionEvent);
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Добавить новую фирму");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Введите наименование:");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                System.out.println("Your name: " + result.get());
+                (new sprFirmDAO(dataSource)).addItem(new sprFirm(null, result.get()));
+            }
+
+        } catch (Exception e) {
+            log.error(e);
+        }
+
+    }
 }

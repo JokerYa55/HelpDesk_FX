@@ -11,17 +11,27 @@
     <stylesheets>
         <URL value="@/styles/sprfirm.css" />
     </stylesheets>
-   <children>
-      <ToolBar layoutX="7.0" layoutY="7.0" prefHeight="40.0" prefWidth="591.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-          <Button mnemonicParsing="false" text="Button" />
-        </items>
-      </ToolBar>
-      <TableView fx:id="idTVMainData" layoutX="66.0" layoutY="60.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
-        <columns>
-          <TableColumn fx:id="idTCId" prefWidth="75.0" text="ID" />
-          <TableColumn fx:id="idTCFirmName" prefWidth="329.0" text="Наименование" />
-        </columns>
-      </TableView>
-   </children>
+    <children>
+        <ToolBar layoutX="7.0" layoutY="7.0" prefHeight="40.0" prefWidth="591.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <Button fx:id="idBtnAdd" mnemonicParsing="false" onAction="#btnAddClick" text="Добавить">
+                    <tooltip>
+                        <Tooltip text="Добавить фирму" />
+                    </tooltip> 
+                </Button>
+                
+                <Button fx:id="idBtnDel" mnemonicParsing="false" text="Удалить">
+                    <tooltip>
+                        <Tooltip text="Удалить фирму" />
+                    </tooltip>
+                </Button>
+            </items>
+        </ToolBar>
+        <TableView fx:id="idTVMainData" layoutX="66.0" layoutY="60.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+            <columns>
+                <TableColumn fx:id="idTCId" prefWidth="141.0" text="Уникальный код" />
+                <TableColumn fx:id="idTCFirmName" prefWidth="263.0" text="Наименование" />
+            </columns>
+        </TableView>
+    </children>
 </AnchorPane>
