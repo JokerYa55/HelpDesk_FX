@@ -19,6 +19,7 @@
                         <Tooltip text="Добавить фирму" />
                     </tooltip> 
                 </Button>
+            <Button mnemonicParsing="false" text="Редактировать" />
                 
                 <Button fx:id="idBtnDel" mnemonicParsing="false" text="Удалить">
                     <tooltip>
@@ -29,8 +30,8 @@
         </ToolBar>
         <TableView fx:id="idTVMainData" layoutX="66.0" layoutY="60.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
             <columns>
-                <TableColumn fx:id="idTCId" prefWidth="141.0" text="Уникальный код" />
-                <TableColumn fx:id="idTCFirmName" prefWidth="263.0" text="Наименование" />
+                <TableColumn fx:id="idTCId" prefWidth="110.0" text="Уникальный код" />
+                <TableColumn fx:id="idTCFirmName" prefWidth="448.0" text="Наименование" />
             </columns>
         </TableView>
     </children>

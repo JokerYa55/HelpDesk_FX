@@ -5,6 +5,8 @@
  */
 package DAO;
 
+import beans.pieChartData;
+import beans.sprUser;
 import beans.tIncident;
 import interfaces.beanDAOInterface;
 import java.sql.Connection;
@@ -13,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import javafx.scene.chart.PieChart;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
@@ -35,7 +38,6 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
         this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "postgres", "123");
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
     }*/
-
     public tIncidentDAO(DataSource dataSource) {
         this.dataSource = dataSource;
         this.jdЬcTemplate = new JdbcTemplate(dataSource);
@@ -229,4 +231,19 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
         return flag;
     }
 
+    public List<PieChart.Data> getStatDataByUser() {
+
+        return (List<PieChart.Data>) this.jdЬcTemplate.query(" select t2.f_name, \n"
+                + "(t2.f_count::float/t2.SUMMA)*100 as f_count\n"
+                + "from\n"
+                + "(SELECT DISTINCT\n"
+                + "  t1.f_name,\n"
+                + "  count(1) OVER(PARTITION BY t1.f_name) as F_COUNT,\n"
+                + "  sum(1) OVER() as SUMMA\n"
+                + "FROM \n"
+                + "  public.t_spr_incident_status t1, \n"
+                + "  public.t_incident t\n"
+                + "WHERE \n"
+                + "  t.f_incident_status_id = t1.id) t2", (ResultSet rs, int rowNum) -> new PieChart.Data(rs.getString("f_name"), rs.getDouble("f_count")));        
+    }
 }

@@ -62,7 +62,7 @@ public class MainApp extends Application {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(sceneMain.getWindow());
             stage.showAndWait();
-            this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", this.userName, this.userPass);
+            this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.240:5432/helpdesk", this.userName, this.userPass);
             log.debug(this.dataSource);
             this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
 

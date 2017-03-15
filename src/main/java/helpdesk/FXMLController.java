@@ -3,6 +3,7 @@ package helpdesk;
 import DAO.sprFirmDAO;
 import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentDAO;
+import beans.pieChartData;
 import beans.sprIncidentStatus;
 import beans.sprUser;
 import beans.tIncident;
@@ -11,10 +12,15 @@ import controllers.SprFirmController;
 import controllers.SprServiceController;
 import controllers.UpdIncidentController;
 import interfaces.controllerInterface;
+import static java.lang.Math.E;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -23,6 +29,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -44,7 +51,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.getLocalDate;
@@ -79,6 +85,9 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     private MenuBar idMBMainMenu;
+
+    @FXML
+    private PieChart idPCAll;
 
 //    @FXML
 //    private void handleButtonAction(ActionEvent event) {
@@ -143,6 +152,7 @@ public class FXMLController implements Initializable, controllerInterface {
     public void refreshForm() {
         refreshTree();
         refreshIncidentList(null);
+        refreshChart();
     }
 
     private void refreshTree() {
@@ -310,6 +320,14 @@ public class FXMLController implements Initializable, controllerInterface {
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    // Обновление диаграммы
+    private void refreshChart() {       
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList((new tIncidentDAO(dataSource)).getStatDataByUser());
+        //final PieChart chart = new PieChart(pieChartData);
+        idPCAll.setData(pieChartData);
+        idPCAll.setTitle("Статус заявок");
     }
 
     // Вызов формы "О программе"
