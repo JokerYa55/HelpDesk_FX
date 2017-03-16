@@ -26,6 +26,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -39,6 +40,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
@@ -49,6 +51,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
@@ -61,6 +64,7 @@ public class FXMLController implements Initializable, controllerInterface {
     private DataSource dataSource;
     private sprUser currentUser;
     private Stage dialogStage;
+    private sprIncidentStatus currentIncidentStatus;
 
     @FXML
     private Label label;
@@ -186,7 +190,8 @@ public class FXMLController implements Initializable, controllerInterface {
                 public void handle(MouseEvent event) {
                     log.debug(event);
                     if (idTreeView.getSelectionModel().getSelectedItem().getValue() instanceof sprIncidentStatus) {
-                        refreshIncidentList(idTreeView.getSelectionModel().getSelectedItem().getValue());
+                        currentIncidentStatus = idTreeView.getSelectionModel().getSelectedItem().getValue();
+                        refreshIncidentList(currentIncidentStatus);
                     } else {
                         refreshIncidentList(null);
                     }
@@ -215,8 +220,8 @@ public class FXMLController implements Initializable, controllerInterface {
                 // создаем панель с информацией об инциденте
                 AnchorPane panel = new AnchorPane();
                 GridPane gridPane = new GridPane();
-                gridPane.setVgap(3);
-                gridPane.setHgap(2);
+                gridPane.setVgap(6);
+                gridPane.setHgap(4);
                 DatePicker dateIncident = new DatePicker();
 
                 // добавляем дату инцидента
@@ -247,26 +252,26 @@ public class FXMLController implements Initializable, controllerInterface {
                 // Добавляем комментарий 
                 Label labelComment = new Label("Комментарий");
                 TextField fComment = new TextField(incident.getFComment());
-                GridPane.setConstraints(labelComment, 0, 3);
+                GridPane.setConstraints(labelComment, 2, 0);
                 gridPane.getChildren().add(labelComment);
-                GridPane.setConstraints(fComment, 1, 3);
+                GridPane.setConstraints(fComment, 3, 0);
                 gridPane.getChildren().add(fComment);
 
                 // добавляем дату создания
                 Label labelDateCreated = new Label("Дата создания инцидента");
                 DatePicker dateCreated = new DatePicker();
                 dateCreated.setValue(getLocalDate(incident.getFDateCreated()));
-                GridPane.setConstraints(labelDateCreated, 0, 4);
+                GridPane.setConstraints(labelDateCreated, 2, 1);
                 gridPane.getChildren().add(labelDateCreated);
-                GridPane.setConstraints(dateCreated, 1, 4);
+                GridPane.setConstraints(dateCreated, 3, 1);
                 gridPane.getChildren().add(dateCreated);
 
                 // Добавляем пользователя 
                 Label labelUser = new Label("Пользователь");
                 TextField fUser = new TextField(incident.getFUserName());
-                GridPane.setConstraints(labelUser, 0, 5);
+                GridPane.setConstraints(labelUser, 2, 2);
                 gridPane.getChildren().add(labelUser);
-                GridPane.setConstraints(fUser, 1, 5);
+                GridPane.setConstraints(fUser, 3, 2);
                 gridPane.getChildren().add(fUser);
 
                 HBox hBox = new HBox();
@@ -305,10 +310,43 @@ public class FXMLController implements Initializable, controllerInterface {
                     }
                 });
                 hBox.getChildren().add(btnEdit);
-                GridPane.setConstraints(hBox, 0, 6);
-                gridPane.getChildren().add(hBox);
 
-                panel.getChildren().add(gridPane);
+                Button btnComment = new Button("Добавить комментарий");
+                btnEdit.setId("idBtnComment");
+                btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        log.info(incident);
+                        //((Node)event.getSource()).
+                        //showUpdIncidentForm(((Node) event.getSource()).getScene().getWindow(), incident);
+                    }
+                });
+                hBox.getChildren().add(btnComment);
+                hBox.setId("idBoxButton");
+
+                // Добавляем панель с кнопками на грид
+                //GridPane.setConstraints(hBox, 0, 6);
+                //gridPane.getChildren().add(hBox);
+                // Добавляем контейнер VBox
+                VBox vBox = new VBox();
+
+                vBox.getChildren().add(gridPane);
+
+                vBox.getChildren().add(hBox);
+                VBox.setMargin(hBox, new Insets(10, 10, 10, 10));
+
+                //panel.getChildren().add(gridPane);
+                // Добавляем к панели сообщения
+                // Добавляем сообщения
+                TextArea t1 = new TextArea("1werqwerqwer qwerqwerqwer qwerqwer");
+                vBox.getChildren().add(t1);
+                TextArea t2 = new TextArea("1werqwerqwer qwerqwerqwer qwerqwer");
+                vBox.getChildren().add(t2);
+
+                VBox.setMargin(t1, new Insets(10, 10, 10, 10));
+                VBox.setMargin(t2, new Insets(10, 10, 10, 70));
+                // Добавляем vBox на панель
+                panel.getChildren().add(vBox);
 
                 TitledPane tp = new TitledPane(String.format("Инцидент № %1$d от %2$tF \nСтатус: %3$s\nФирма: %4$s", incident.getId(), incident.getFDate(), incident.getFIncidentStatusName(), incident.getFFirmName()), panel);
                 tp.getStyleClass().add("incidentErr");
@@ -323,7 +361,7 @@ public class FXMLController implements Initializable, controllerInterface {
     }
 
     // Обновление диаграммы
-    private void refreshChart() {       
+    private void refreshChart() {
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList((new tIncidentDAO(dataSource)).getStatDataByUser());
         //final PieChart chart = new PieChart(pieChartData);
         idPCAll.setData(pieChartData);
@@ -365,7 +403,9 @@ public class FXMLController implements Initializable, controllerInterface {
             control.setDataSource(dataSource);
             control.setDialogStage(stage);
             control.initForm();
-            stage.show();
+            stage.showAndWait();
+            refreshIncidentList(currentIncidentStatus);
+            refreshChart();
         } catch (Exception e) {
             log.error(e);
         }
@@ -395,7 +435,9 @@ public class FXMLController implements Initializable, controllerInterface {
             contr1.setCurrentUser(currentUser);
             contr1.setDataSource(dataSource);
             contr1.initForm();
-            stage.show();
+            stage.showAndWait();
+            refreshIncidentList(currentIncidentStatus);
+            refreshChart();
 
         } catch (Exception e) {
             log.error(e);
