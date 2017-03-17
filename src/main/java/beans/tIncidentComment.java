@@ -35,6 +35,20 @@ public class tIncidentComment {
     private String UserName;
     private String Comment;
 
+    public tIncidentComment(Long Id, Long IdIncident, Long ParentId, Long CommentType, String CommentTypeName, Date DateCreated, Long UserId, String UserName, String Comment) {
+        this.Id = Id;
+        this.IdIncident = IdIncident;
+        this.ParentId = ParentId;
+        this.CommentType = CommentType;
+        this.CommentTypeName = CommentTypeName;
+        this.DateCreated = DateCreated;
+        this.UserId = UserId;
+        this.UserName = UserName;
+        this.Comment = Comment;
+    }
+
+    
+    
     public Logger getLog() {
         return log;
     }

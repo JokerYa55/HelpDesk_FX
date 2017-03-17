@@ -5,6 +5,7 @@ import DAO.tIncidentDAO;
 import beans.sprIncidentStatus;
 import beans.sprUser;
 import beans.tIncident;
+import beans.tIncidentComment;
 import controllers.AddIncidentController;
 import controllers.SprFirmController;
 import controllers.SprServiceController;
@@ -325,16 +326,20 @@ public class FXMLController implements Initializable, controllerInterface {
                 //panel.getChildren().add(gridPane);
                 // Добавляем к панели сообщения
                 // Добавляем сообщения
-                TextArea t1 = new TextArea("1werqwerqwer qwerqwedfgh dfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfgh rqwer qwerqwer");
-                t1.setId("idTAMessage1");
-                t1.setEditable(false);
-                vBox.getChildren().add(t1);
-                TextArea t2 = new TextArea("1werqwerqwer qwerqwerq sh sd hsf ghdf ghdfghd  ghdfgh dfghdfg hdf ghdf ghwer qwerqwer");
-                t2.setId("idTAMessage2");
-                vBox.getChildren().add(t2);
+                List<tIncidentComment> commentList = (new tIncidentDAO(dataSource)).getIncidentComment(incident);
+                for (tIncidentComment itemComment : commentList) {
+                    TextArea t1 = new TextArea(itemComment.getComment());
+                    t1.setId("idTAMessage_" + itemComment.getId());
+                    t1.setEditable(false);
+                    vBox.getChildren().add(t1);
+                    VBox.setMargin(t1, new Insets(10, 10, 10, 10));
+                }
 
-                VBox.setMargin(t1, new Insets(10, 10, 10, 10));
-                VBox.setMargin(t2, new Insets(10, 10, 10, 70));
+                /*TextArea t2 = new TextArea("1werqwerqwer qwerqwerq sh sd hsf ghdf ghdfghd  ghdfgh dfghdfg hdf ghdf ghwer qwerqwer");
+                t2.setId("idTAMessage2");
+                vBox.getChildren().add(t2);*/
+                
+                //VBox.setMargin(t2, new Insets(10, 10, 10, 70));
                 // Добавляем vBox на панель
                 panel.getChildren().add(vBox);
 
