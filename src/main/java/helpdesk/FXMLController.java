@@ -1,9 +1,7 @@
 package helpdesk;
 
-import DAO.sprFirmDAO;
 import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentDAO;
-import beans.pieChartData;
 import beans.sprIncidentStatus;
 import beans.sprUser;
 import beans.tIncident;
@@ -12,10 +10,7 @@ import controllers.SprFirmController;
 import controllers.SprServiceController;
 import controllers.UpdIncidentController;
 import interfaces.controllerInterface;
-import static java.lang.Math.E;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -136,9 +131,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loader.load();
-
             UpdIncidentController contr1 = loader.getController();
-
             stage.setTitle("Новый инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -338,9 +331,12 @@ public class FXMLController implements Initializable, controllerInterface {
                 //panel.getChildren().add(gridPane);
                 // Добавляем к панели сообщения
                 // Добавляем сообщения
-                TextArea t1 = new TextArea("1werqwerqwer qwerqwerqwer qwerqwer");
+                TextArea t1 = new TextArea("1werqwerqwer qwerqwedfgh dfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfghdfgh rqwer qwerqwer");
+                t1.setId("idTAMessage1");
+                t1.setEditable(false);
                 vBox.getChildren().add(t1);
-                TextArea t2 = new TextArea("1werqwerqwer qwerqwerqwer qwerqwer");
+                TextArea t2 = new TextArea("1werqwerqwer qwerqwerq sh sd hsf ghdf ghdfghd  ghdfgh dfghdfg hdf ghdf ghwer qwerqwer");
+                t2.setId("idTAMessage2");
                 vBox.getChildren().add(t2);
 
                 VBox.setMargin(t1, new Insets(10, 10, 10, 10));

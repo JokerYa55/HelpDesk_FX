@@ -6,13 +6,11 @@
 package DAO;
 
 import beans.sprFirm;
-import beans.sprUser;
 import interfaces.beanDAOInterface;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
-import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;

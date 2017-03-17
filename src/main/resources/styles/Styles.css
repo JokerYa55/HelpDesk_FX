@@ -14,3 +14,10 @@
 /*#idButtonNew {
     -fx-background-image: url("/icons/Flat_Icons_21.png");
 }*/
+
+#idTAMessage1 {
+    -fx-border-radius: 10;
+    /*-fx-background-color: #2fa02f, #2f2d2f;*/
+    -fx-wrap-text: true;
+    -fx-background-radius: 10;
+}
