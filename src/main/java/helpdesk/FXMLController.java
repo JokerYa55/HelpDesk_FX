@@ -88,12 +88,6 @@ public class FXMLController implements Initializable, controllerInterface {
     @FXML
     private PieChart idPCAll;
 
-//    @FXML
-//    private void handleButtonAction(ActionEvent event) {
-//        System.out.println("You clicked me!");
-//        label.setText("Hello World!");
-//        (new sprFirmDAO(dataSource)).getItemById(Long.MIN_VALUE);
-//    }
     @FXML
     private void newIncidentButtonAction(ActionEvent event) {
         log.info("newIncidentButtonAction -> " + event.toString());
