@@ -15,9 +15,27 @@
     -fx-background-image: url("/icons/Flat_Icons_21.png");
 }*/
 
-#idTAMessage1 {
+/*#idTAMessage_8 .content{
     -fx-border-radius: 10;
-    /*-fx-background-color: #2fa02f, #2f2d2f;*/
+    -fx-background-color: #2fa02f, #2f2d2f;
     -fx-wrap-text: true;
     -fx-background-radius: 10;
 }
+
+
+#idTAMessage_7 .content{
+    -fx-background-color: red;
+    -fx-wrap-text: true;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}*/
+
+.messageQ .content{-fx-border-radius: 10;
+          -fx-background-color: #F7FCB1;
+          -fx-wrap-text: true;
+          -fx-background-radius: 10;}
+
+.messageA .content{-fx-background-color: red;
+          -fx-wrap-text: true;
+          -fx-border-radius: 10;
+          -fx-background-radius: 10;}

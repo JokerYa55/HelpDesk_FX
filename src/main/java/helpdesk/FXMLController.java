@@ -47,11 +47,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
+import util.utils.btnStatus;
 import static util.utils.getLocalDate;
 
 public class FXMLController implements Initializable, controllerInterface {
@@ -328,17 +330,30 @@ public class FXMLController implements Initializable, controllerInterface {
                 // Добавляем сообщения
                 List<tIncidentComment> commentList = (new tIncidentDAO(dataSource)).getIncidentComment(incident);
                 for (tIncidentComment itemComment : commentList) {
-                    TextArea t1 = new TextArea(itemComment.getComment());
+                    String message = itemComment.getUserName() + " : " + itemComment.getDateCreated() + "\n" + itemComment.getComment(); 
+                    int rowNum = message.length()/80;
+                    if (rowNum==0) rowNum ++;
+                    log.debug("rowNum = " + rowNum);
+                    TextArea t1 = new TextArea(message);
                     t1.setId("idTAMessage_" + itemComment.getId());
+                    log.info(t1.getId());
                     t1.setEditable(false);
+                    t1.setScrollLeft(5);
+                    t1.setPrefHeight(45*rowNum);
+                    t1.getStyleClass().add("messageQ");
+                    t1.setWrapText(true);
                     vBox.getChildren().add(t1);
-                    VBox.setMargin(t1, new Insets(10, 10, 10, 10));
+                    
+                    t1.setStyle("text-area-background: green;");
+                    /*Region region = ( Region ) t1.lookup( ".content" );
+                    region.setStyle( "-fx-background-color: yellow" );*/
+                    
+                    VBox.setMargin(t1, new Insets(10, 10, 10, 30 * itemComment.getLevel()));
                 }
 
                 /*TextArea t2 = new TextArea("1werqwerqwer qwerqwerq sh sd hsf ghdf ghdfghd  ghdfgh dfghdfg hdf ghdf ghwer qwerqwer");
                 t2.setId("idTAMessage2");
                 vBox.getChildren().add(t2);*/
-                
                 //VBox.setMargin(t2, new Insets(10, 10, 10, 70));
                 // Добавляем vBox на панель
                 panel.getChildren().add(vBox);
@@ -399,8 +414,10 @@ public class FXMLController implements Initializable, controllerInterface {
             control.setDialogStage(stage);
             control.initForm();
             stage.showAndWait();
-            refreshIncidentList(currentIncidentStatus);
-            refreshChart();
+            if (control.getFormResult() == btnStatus.btnOK) {
+                refreshIncidentList(currentIncidentStatus);
+                refreshChart();
+            }
         } catch (Exception e) {
             log.error(e);
         }
@@ -431,9 +448,10 @@ public class FXMLController implements Initializable, controllerInterface {
             contr1.setDataSource(dataSource);
             contr1.initForm();
             stage.showAndWait();
-            refreshIncidentList(currentIncidentStatus);
-            refreshChart();
-
+            if (contr1.getFormResult() == btnStatus.btnOK) {
+                refreshIncidentList(currentIncidentStatus);
+                refreshChart();
+            };
         } catch (Exception e) {
             log.error(e);
         }

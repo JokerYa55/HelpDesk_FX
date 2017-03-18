@@ -34,8 +34,9 @@ public class tIncidentComment {
     private Long UserId;
     private String UserName;
     private String Comment;
+    private Long Level;
 
-    public tIncidentComment(Long Id, Long IdIncident, Long ParentId, Long CommentType, String CommentTypeName, Date DateCreated, Long UserId, String UserName, String Comment) {
+    public tIncidentComment(Long Id, Long IdIncident, Long ParentId, Long CommentType, String CommentTypeName, Date DateCreated, Long UserId, String UserName, String Comment, Long Level) {
         this.Id = Id;
         this.IdIncident = IdIncident;
         this.ParentId = ParentId;
@@ -45,10 +46,9 @@ public class tIncidentComment {
         this.UserId = UserId;
         this.UserName = UserName;
         this.Comment = Comment;
+        this.Level = Level;
     }
 
-    
-    
     public Logger getLog() {
         return log;
     }
@@ -128,5 +128,9 @@ public class tIncidentComment {
     public void setUserName(String UserName) {
         this.UserName = UserName;
     }
-    
+
+    public Long getLevel() {
+        return Level;
+    }
+
 }

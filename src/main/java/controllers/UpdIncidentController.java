@@ -22,14 +22,11 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -37,8 +34,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
-import util.formLocator;
 import static util.utils.NOW_LOCAL_DATE;
+import util.utils.btnStatus;
 import static util.utils.getLocalDate;
 
 /**
@@ -55,7 +52,8 @@ public class UpdIncidentController implements Initializable, controllerInterface
     private tIncident incident = null;
     private Stage dialogStage;
     private sprUser currentUser;
-    private DataSource dataSource;
+    private DataSource dataSource;    
+    private btnStatus formResult = btnStatus.btnCancel; 
 
     @FXML
     DatePicker idDPFDate;
@@ -104,6 +102,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
         item.setFUserId(incident.getFUserId());
         log.info(item.toString());
         (new tIncidentDAO(dataSource)).updateItem(item);
+        this.formResult = btnStatus.btnOK;
         dialogStage.close();
     }
 
@@ -198,5 +197,9 @@ public class UpdIncidentController implements Initializable, controllerInterface
 //        }
 //        return null;
 //    }
+
+    public btnStatus getFormResult() {
+        return formResult;
+    }
 
 }

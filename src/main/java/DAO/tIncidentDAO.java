@@ -5,8 +5,6 @@
  */
 package DAO;
 
-import beans.pieChartData;
-import beans.sprUser;
 import beans.tIncident;
 import beans.tIncidentComment;
 import interfaces.beanDAOInterface;
@@ -22,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -308,7 +305,8 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
                     rs.getDate("f_date_created"),
                     rs.getLong("f_user_id"),
                     rs.getString("f_user_name"),
-                    rs.getString("f_comment")), incident.getId());
+                    rs.getString("f_comment"),
+                    rs.getLong("level")), incident.getId());
         } catch (Exception e) {
             log.error(e);
         }

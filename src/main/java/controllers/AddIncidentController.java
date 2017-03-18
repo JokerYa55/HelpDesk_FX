@@ -32,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
+import util.utils;
 import static util.utils.NOW_LOCAL_DATE;
 
 /**
@@ -48,6 +49,7 @@ public class AddIncidentController implements Initializable, controllerInterface
     private Stage dialogStage;
     private sprUser currentUser;
     private DataSource dataSource;
+    private utils.btnStatus formResult = utils.btnStatus.btnCancel; 
 
     @FXML
     DatePicker idDPFDate;
@@ -92,6 +94,7 @@ public class AddIncidentController implements Initializable, controllerInterface
         item.setFIncidentStatusId(new Long(1));
         log.info(item.toString());
         (new tIncidentDAO(dataSource)).addItem(item);
+        formResult = utils.btnStatus.btnOK;
         this.dialogStage.close();
     }
 
@@ -153,6 +156,10 @@ public class AddIncidentController implements Initializable, controllerInterface
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    public utils.btnStatus getFormResult() {
+        return formResult;
     }
 
 }
