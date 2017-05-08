@@ -313,6 +313,17 @@ public class FXMLController implements Initializable, controllerInterface {
                 });
                 hBox.getChildren().add(btnComment);
                 hBox.setId("idBoxButton");
+                
+                // Добавляем панель с информацией о комментариях к инциденту
+                AnchorPane pComment = new AnchorPane();
+                Accordion panelComment = new Accordion();
+                
+                Button b1 = new Button("test");
+                pComment.getChildren().add(b1);
+                
+                TitledPane tp1 = new TitledPane("test", pComment);
+                panelComment.getPanes().add(tp1);
+                
 
                 // Добавляем панель с кнопками на грид
                 //GridPane.setConstraints(hBox, 0, 6);
@@ -321,8 +332,8 @@ public class FXMLController implements Initializable, controllerInterface {
                 VBox vBox = new VBox();
 
                 vBox.getChildren().add(gridPane);
-
                 vBox.getChildren().add(hBox);
+                vBox.getChildren().add(panelComment);
                 VBox.setMargin(hBox, new Insets(10, 10, 10, 10));
 
                 //panel.getChildren().add(gridPane);
