@@ -6,6 +6,8 @@ import controllers.LoginFormFXMLController;
 import java.io.IOException;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,6 +39,14 @@ public class MainApp extends Application {
         stage.setTitle("HelpDesk v. 1.0");
         stage.setScene(this.sceneMain);
         stage.setMaximized(true);
+        stage.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                log.info("Resize -> " + newValue + " : " + oldValue);
+                mainFormController.resizeForm();
+            }
+        });
+
         stage.show();
         showLoginDialog();
         this.mainFormController.setCurrentUser(currentUser);

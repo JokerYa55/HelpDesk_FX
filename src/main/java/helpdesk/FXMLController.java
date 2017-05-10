@@ -7,18 +7,17 @@ import beans.sprIncidentStatus;
 import beans.sprUser;
 import beans.tIncident;
 import beans.tIncidentComment;
-import com.sun.javafx.scene.control.skin.ScrollPaneSkin;
 import controllers.AddIncidentController;
 import controllers.SprFirmController;
 import controllers.SprServiceController;
 import controllers.UpdIncidentController;
 import interfaces.controllerInterface;
 import java.net.URL;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,7 +35,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -54,7 +52,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -70,6 +67,9 @@ public class FXMLController implements Initializable, controllerInterface {
     private sprUser currentUser;
     private Stage dialogStage;
     private sprIncidentStatus currentIncidentStatus;
+    private List<Button> buttonPageList = new ArrayList<>();
+    private List<tIncident> incedentList;
+    private int currentPage = 1;
 
     @FXML
     private Label label;
@@ -82,6 +82,9 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     private MenuItem idMIAbout;
+    
+    @FXML
+    private HBox HBNumButton;
 
     @FXML
     Accordion idAccordion;
@@ -100,6 +103,9 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     private PieChart idPCAll;
+    
+    @FXML 
+    private AnchorPane idAPRight;
 
     @FXML
     private void newIncidentButtonAction(ActionEvent event) {
@@ -145,7 +151,7 @@ public class FXMLController implements Initializable, controllerInterface {
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+            stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());            
             stage.show();
 
         } catch (Exception e) {
@@ -153,6 +159,29 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
+    public void resizeForm(){
+     // TODO: изменение размеров под размер окна
+            try {
+                //log.info(idAccordion.getParent().getClass().getName());
+                log.debug(idSP_Inc.getWidth());
+                idAccordion.setPrefWidth(idSP_Inc.getWidth()-10);
+            } catch (Exception e1) {
+                log.error(e1.getMessage());
+            }
+    }
+    
+    // TODO: отображаем панель кнопок
+    private void refreshButtonPage(){
+        int pageCount = this.incedentList.size()%10;
+        for (int i = 1; i<= pageCount; i++) {            
+            Button b = new Button(i+"");            
+            this.buttonPageList.add(b);            
+            this.HBNumButton.getChildren().add(b);
+            GridPane.setMargin(b, new Insets(10, 10, 10, 10));
+        }
+        
+    }
+    
     public void refreshForm() {
         refreshTree();
         refreshIncidentList(null);
@@ -204,25 +233,25 @@ public class FXMLController implements Initializable, controllerInterface {
 
     private void refreshIncidentList(sprIncidentStatus id) {
         try {
+            // устанавливаем начальную страницу = 1
+            this.currentPage = 1;
             log.debug("refreshIncidentList");
             idAccordion.getPanes().clear();
-            try {
-                log.info(idAccordion.getParent().getClass().getName());
-                log.debug(idSP_Inc.getWidth());
-                idAccordion.setPrefWidth(idSP_Inc.getWidth()-10);
-            } catch (Exception e1) {
-                log.error(e1.getMessage());
-            }
+            
+           
             System.out.println("refreshIncidentList()");
             // Заполняем список инцидентов
             idAccordion.getPanes().clear();
-            List<tIncident> incedentList = null;
+            incedentList = null;
             log.debug(id);
             if (id == null) {
-                incedentList = (new tIncidentDAO(dataSource)).getItemList();
+                incedentList = (new tIncidentDAO(dataSource)).getItemList(this.currentPage);
             } else {
                 incedentList = (new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
             }
+            
+            refreshButtonPage();
+                    
             for (tIncident incident : incedentList) {
                 // создаем панель с информацией об инциденте
                 AnchorPane panel = new AnchorPane();
@@ -582,5 +611,6 @@ public class FXMLController implements Initializable, controllerInterface {
         log.debug("initForm");
         idTreeView.getStyleClass().add("my-tree-view");
     }
-    //
+    
+    
 }

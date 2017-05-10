@@ -100,6 +100,54 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
         }
     }
 
+    public List<tIncident> getItemList(int pageNum) {
+        try {
+            log.debug("getItemList");
+            return (List<tIncident>) jdЬcTemplate.query("SELECT \n"
+                    + "  t.id, \n"
+                    + "  t.f_date, \n"
+                    + "  t.f_firm_id, \n"
+                    + "  t1.f_name AS f_firm_name, \n"
+                    + "  t.f_service_id, \n"
+                    + "  t_spr_service.f_name AS f_service_name, \n"
+                    + "  t.f_user_id, \n"
+                    + "  t_spr_users.f_name AS f_user_name, \n"
+                    + "  t.f_incident_status_id, \n"
+                    + "  t_spr_incident_status.f_name AS f_incident_status_name, \n"
+                    + "  t.f_comment, \n"
+                    + "  t.f_date_created\n"
+                    + "FROM \n"
+                    + "  public.t_incident t, \n"
+                    + "  public.t_spr_users, \n"
+                    + "  public.t_spr_service, \n"
+                    + "  public.t_spr_firm t1, \n"
+                    + "  public.t_spr_incident_status \n"                    
+                    + " WHERE \n"
+                    + "  t.f_firm_id = t1.id AND\n"
+                    + "  t.f_service_id = t_spr_service.id AND\n"
+                    + "  t.f_user_id = t_spr_users.id AND\n"
+                    + "  t.f_incident_status_id = t_spr_incident_status.id\n"
+                    + "ORDER BY\n"
+                    + "  t.f_date DESC "
+                    + " LIMIT 10 OFFSET " + (pageNum*10),
+                    (ResultSet rs, int rowNum) -> new tIncident(rs.getLong("id"),
+                            rs.getDate("f_date"),
+                            rs.getLong("f_firm_id"),
+                            rs.getString("f_firm_name"),
+                            rs.getLong("f_service_id"),
+                            rs.getString("f_service_name"),
+                            rs.getString("f_comment"),
+                            rs.getDate("f_date_created"),
+                            rs.getLong("f_user_id"),
+                            rs.getString("f_user_name"),
+                            rs.getLong("f_incident_status_id"),
+                            rs.getString("f_incident_status_name")));
+        } catch (Exception e) {
+            log.error(e);
+            return null;
+        }
+    }
+    
     public List<tIncident> getItemListByStatus(Long statusId) {
         try {
             log.debug("getItemListByStatus");
