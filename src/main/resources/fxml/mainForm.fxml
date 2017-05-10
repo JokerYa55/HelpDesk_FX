@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
@@ -101,9 +102,12 @@
                     <children>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <ScrollPane layoutX="121.0" layoutY="141.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <ScrollPane fx:id="idSP_Inc" layoutX="121.0" layoutY="141.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
                            <content>
-                              <Accordion fx:id="idAccordion" />
+                              <Accordion fx:id="idAccordion">
+                                 <cursor>
+                                    <Cursor fx:constant="S_RESIZE" />
+                                 </cursor></Accordion>
                            </content>
                         </ScrollPane>
                      </children>

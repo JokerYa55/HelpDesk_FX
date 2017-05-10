@@ -36,6 +36,9 @@ public class tIncidentComment {
     private String Comment;
     private Long Level;
 
+    public tIncidentComment() {
+    }
+    
     public tIncidentComment(Long Id, Long IdIncident, Long ParentId, Long CommentType, String CommentTypeName, Date DateCreated, Long UserId, String UserName, String Comment, Long Level) {
         this.Id = Id;
         this.IdIncident = IdIncident;
@@ -49,13 +52,13 @@ public class tIncidentComment {
         this.Level = Level;
     }
 
-    public Logger getLog() {
-        return log;
-    }
-
-    public void setLog(Logger log) {
-        this.log = log;
-    }
+//    public Logger getLog() {
+//        return log;
+//    }
+//
+//    public void setLog(Logger log) {
+//        this.log = log;
+//    }
 
     public Long getId() {
         return Id;

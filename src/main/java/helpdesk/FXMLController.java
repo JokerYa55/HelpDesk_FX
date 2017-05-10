@@ -1,11 +1,13 @@
 package helpdesk;
 
 import DAO.sprIncidentStatusDAO;
+import DAO.tIncidentCommentDAO;
 import DAO.tIncidentDAO;
 import beans.sprIncidentStatus;
 import beans.sprUser;
 import beans.tIncident;
 import beans.tIncidentComment;
+import com.sun.javafx.scene.control.skin.ScrollPaneSkin;
 import controllers.AddIncidentController;
 import controllers.SprFirmController;
 import controllers.SprServiceController;
@@ -15,6 +17,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,12 +36,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -81,6 +88,9 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     TreeView<sprIncidentStatus> idTreeView;
+    
+    @FXML
+    ScrollPane idSP_Inc;
 
     @FXML
     private MenuItem idMIRepInc;
@@ -196,6 +206,13 @@ public class FXMLController implements Initializable, controllerInterface {
         try {
             log.debug("refreshIncidentList");
             idAccordion.getPanes().clear();
+            try {
+                log.info(idAccordion.getParent().getClass().getName());
+                log.debug(idSP_Inc.getWidth());
+                idAccordion.setPrefWidth(idSP_Inc.getWidth()-10);
+            } catch (Exception e1) {
+                log.error(e1.getMessage());
+            }
             System.out.println("refreshIncidentList()");
             // Заполняем список инцидентов
             idAccordion.getPanes().clear();
@@ -302,73 +319,84 @@ public class FXMLController implements Initializable, controllerInterface {
                 hBox.getChildren().add(btnEdit);
 
                 Button btnComment = new Button("Добавить комментарий");
-                btnEdit.setId("idBtnComment");
-                btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                btnComment.setId("idBtnComment");
+                btnComment.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        log.info(incident);
-                        //((Node)event.getSource()).
-                        //showUpdIncidentForm(((Node) event.getSource()).getScene().getWindow(), incident);
+                        log.debug("addComment");
+                        log.info(event);
+                        TextInputDialog dialog = new TextInputDialog("walter");
+                        dialog.setTitle("Text Input Dialog");
+                        dialog.setHeaderText("Look, a Text Input Dialog");
+                        dialog.setContentText("Please enter your name:");
+                        Optional<String> result = dialog.showAndWait();
+                        if (result.isPresent()) {
+                            System.out.println("Your name: " + result.get());
+                            tIncidentComment comment = new tIncidentComment();
+                            comment.setIdIncident(incident.getId());
+                            comment.setComment(result.get());
+                            comment.setUserId(currentUser.getId());
+                            comment.setCommentType(new Long(5));
+                            (new tIncidentCommentDAO(dataSource)).addItem(comment);
+                        }
+                        result.ifPresent(name -> System.out.println("Your name: " + name));
                     }
                 });
                 hBox.getChildren().add(btnComment);
                 hBox.setId("idBoxButton");
-                
+
                 // Добавляем панель с информацией о комментариях к инциденту
                 AnchorPane pComment = new AnchorPane();
                 Accordion panelComment = new Accordion();
-                
-                Button b1 = new Button("test");
-                pComment.getChildren().add(b1);
-                
-                TitledPane tp1 = new TitledPane("test", pComment);
-                panelComment.getPanes().add(tp1);
-                
 
-                // Добавляем панель с кнопками на грид
-                //GridPane.setConstraints(hBox, 0, 6);
-                //gridPane.getChildren().add(hBox);
-                // Добавляем контейнер VBox
+                // формируем список комментариев
                 VBox vBox = new VBox();
-
                 vBox.getChildren().add(gridPane);
                 vBox.getChildren().add(hBox);
                 vBox.getChildren().add(panelComment);
                 VBox.setMargin(hBox, new Insets(10, 10, 10, 10));
+
+                VBox vComment = new VBox();
 
                 //panel.getChildren().add(gridPane);
                 // Добавляем к панели сообщения
                 // Добавляем сообщения
                 List<tIncidentComment> commentList = (new tIncidentDAO(dataSource)).getIncidentComment(incident);
                 for (tIncidentComment itemComment : commentList) {
-                    String message = itemComment.getUserName() + " : " + itemComment.getDateCreated() + "\n" + itemComment.getComment(); 
-                    int rowNum = message.length()/80;
-                    if (rowNum==0) rowNum ++;
+                    String message = itemComment.getUserName() + " : " + itemComment.getDateCreated() + "\n" + itemComment.getComment();
+                    int rowNum = message.length() / 80;
+                    if (rowNum == 0) {
+                        rowNum++;
+                    }
                     log.debug("rowNum = " + rowNum);
                     TextArea t1 = new TextArea(message);
                     t1.setId("idTAMessage_" + itemComment.getId());
                     log.info(t1.getId());
                     t1.setEditable(false);
                     t1.setScrollLeft(5);
-                    t1.setPrefHeight(45*rowNum);
+                    t1.setPrefHeight(45 * rowNum);
                     t1.getStyleClass().add("messageQ");
                     t1.setWrapText(true);
-                    vBox.getChildren().add(t1);
-                    
+                    //vBox.getChildren().add(t1);
+                    vComment.getChildren().add(t1);
+
                     t1.setStyle("text-area-background: green;");
                     /*Region region = ( Region ) t1.lookup( ".content" );
                     region.setStyle( "-fx-background-color: yellow" );*/
-                    
-                    VBox.setMargin(t1, new Insets(10, 10, 10, 30 * itemComment.getLevel()));
+
+                    vComment.setMargin(t1, new Insets(10, 10, 10, 30 * itemComment.getLevel()));
                 }
 
-                /*TextArea t2 = new TextArea("1werqwerqwer qwerqwerq sh sd hsf ghdf ghdfghd  ghdfgh dfghdfg hdf ghdf ghwer qwerqwer");
-                t2.setId("idTAMessage2");
-                vBox.getChildren().add(t2);*/
-                //VBox.setMargin(t2, new Insets(10, 10, 10, 70));
+                pComment.getChildren().add(vComment);
+
                 // Добавляем vBox на панель
                 panel.getChildren().add(vBox);
 
+                TitledPane tp1 = new TitledPane("Коментприи (" + commentList.size() + ")", pComment);
+                panelComment.getPanes().add(tp1);
+
+                // Добавляем панель с кнопками на грид               
+                // Добавляем контейнер VBox
                 TitledPane tp = new TitledPane(String.format("Инцидент № %1$d от %2$tF \nСтатус: %3$s\nФирма: %4$s", incident.getId(), incident.getFDate(), incident.getFIncidentStatusName(), incident.getFFirmName()), panel);
                 tp.getStyleClass().add("incidentErr");
                 tp.setOnMousePressed((MouseEvent event) -> {
