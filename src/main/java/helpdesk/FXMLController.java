@@ -172,8 +172,11 @@ public class FXMLController implements Initializable, controllerInterface {
     
     // TODO: отображаем панель кнопок
     private void refreshButtonPage(){
-        int pageCount = this.incedentList.size()%10;
-        for (int i = 1; i<= pageCount; i++) {            
+        log.debug("refreshButtonPage()");
+        long recCount = (new tIncidentDAO(dataSource)).getItemCount();
+        log.debug("recCount -> " + recCount);
+        long pageCount = (recCount%10);
+        for (long i = 1; i<= pageCount; i++) {            
             Button b = new Button(i+"");            
             this.buttonPageList.add(b);            
             this.HBNumButton.getChildren().add(b);

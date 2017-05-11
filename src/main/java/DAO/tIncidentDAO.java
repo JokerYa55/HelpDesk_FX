@@ -148,6 +148,22 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
         }
     }
     
+    public long getItemCount(){
+         try {
+            log.debug("getItemCount()");
+            return jdЬcTemplate.queryForObject("SELECT count (1) as f_count FROM \n" 
+                    + " t_incident t, t_spr_users, t_spr_service, t_spr_firm t1, t_spr_incident_status" 
+                    + " WHERE \n " 
+                    + "  t.f_firm_id = t1.id AND\n " 
+                    + "  t.f_service_id = t_spr_service.id AND\n " 
+                    + "  t.f_user_id = t_spr_users.id AND\n " 
+                    + "  t.f_incident_status_id = t_spr_incident_status.id;", Long.class);           
+        } catch (Exception e) {
+            log.error(e);
+            return 0;
+        }
+    }
+    
     public List<tIncident> getItemListByStatus(Long statusId) {
         try {
             log.debug("getItemListByStatus");
