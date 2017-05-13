@@ -57,6 +57,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
+import org.controlsfx.control.action.Action;
 import util.utils.btnStatus;
 import static util.utils.getLocalDate;
 
@@ -175,11 +176,25 @@ public class FXMLController implements Initializable, controllerInterface {
         log.debug("refreshButtonPage()");
         long recCount = (new tIncidentDAO(dataSource)).getItemCount();
         log.debug("recCount -> " + recCount);
-        long pageCount = (recCount%10);
+        long pageCount = (recCount%10);       
+        this.HBNumButton.getChildren().clear();
+        this.buttonPageList.clear();
         for (long i = 1; i<= pageCount; i++) {            
-            Button b = new Button(i+"");            
+            Button b = new Button(i+"");   
+            if (i==this.currentPage)
+            {
+                b.setDisable(true);
+            }
+            b.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    log.debug(((Button) event.getSource()).getText());
+                    currentPage = (new Integer(((Button) event.getSource()).getText()));                    
+                    refreshIncidentList(currentIncidentStatus);
+                }
+            });
             this.buttonPageList.add(b);            
-            this.HBNumButton.getChildren().add(b);
+            this.HBNumButton.getChildren().add(b);            
             GridPane.setMargin(b, new Insets(10, 10, 10, 10));
         }
         
@@ -237,12 +252,10 @@ public class FXMLController implements Initializable, controllerInterface {
     private void refreshIncidentList(sprIncidentStatus id) {
         try {
             // устанавливаем начальную страницу = 1
-            this.currentPage = 1;
+            //this.currentPage = 1;
             log.debug("refreshIncidentList");
             idAccordion.getPanes().clear();
             
-           
-            System.out.println("refreshIncidentList()");
             // Заполняем список инцидентов
             idAccordion.getPanes().clear();
             incedentList = null;
@@ -614,6 +627,4 @@ public class FXMLController implements Initializable, controllerInterface {
         log.debug("initForm");
         idTreeView.getStyleClass().add("my-tree-view");
     }
-    
-    
 }
