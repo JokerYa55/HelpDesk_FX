@@ -129,7 +129,7 @@ public class tIncidentDAO implements beanDAOInterface<tIncident, Long> {
                     + "  t.f_incident_status_id = t_spr_incident_status.id\n"
                     + "ORDER BY\n"
                     + "  t.f_date DESC "
-                    + " LIMIT 10 OFFSET " + (pageNum*10),
+                    + " LIMIT 10 OFFSET " + ((pageNum-1)*10),
                     (ResultSet rs, int rowNum) -> new tIncident(rs.getLong("id"),
                             rs.getDate("f_date"),
                             rs.getLong("f_firm_id"),

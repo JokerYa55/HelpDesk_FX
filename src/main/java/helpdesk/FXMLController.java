@@ -13,7 +13,6 @@ import controllers.SprServiceController;
 import controllers.UpdIncidentController;
 import interfaces.controllerInterface;
 import java.net.URL;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +56,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
-import org.controlsfx.control.action.Action;
 import util.utils.btnStatus;
 import static util.utils.getLocalDate;
 
@@ -83,7 +81,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     private MenuItem idMIAbout;
-    
+
     @FXML
     private HBox HBNumButton;
 
@@ -92,7 +90,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     TreeView<sprIncidentStatus> idTreeView;
-    
+
     @FXML
     ScrollPane idSP_Inc;
 
@@ -104,8 +102,8 @@ public class FXMLController implements Initializable, controllerInterface {
 
     @FXML
     private PieChart idPCAll;
-    
-    @FXML 
+
+    @FXML
     private AnchorPane idAPRight;
 
     @FXML
@@ -152,7 +150,7 @@ public class FXMLController implements Initializable, controllerInterface {
             stage.setResizable(false);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());            
+            stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
             stage.show();
 
         } catch (Exception e) {
@@ -160,46 +158,45 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
-    public void resizeForm(){
-     // TODO: изменение размеров под размер окна
-            try {
-                //log.info(idAccordion.getParent().getClass().getName());
-                log.debug(idSP_Inc.getWidth());
-                idAccordion.setPrefWidth(idSP_Inc.getWidth()-10);
-            } catch (Exception e1) {
-                log.error(e1.getMessage());
-            }
+    public void resizeForm() {
+        // TODO: изменение размеров под размер окна
+        try {
+            //log.info(idAccordion.getParent().getClass().getName());
+            log.debug(idSP_Inc.getWidth());
+            idAccordion.setPrefWidth(idSP_Inc.getWidth() - 10);
+        } catch (Exception e1) {
+            log.error(e1.getMessage());
+        }
     }
-    
+
     // TODO: отображаем панель кнопок
-    private void refreshButtonPage(){
+    private void refreshButtonPage() {
         log.debug("refreshButtonPage()");
         long recCount = (new tIncidentDAO(dataSource)).getItemCount();
         log.debug("recCount -> " + recCount);
-        long pageCount = (recCount%10);       
+        long pageCount = (recCount % 10);
         this.HBNumButton.getChildren().clear();
         this.buttonPageList.clear();
-        for (long i = 1; i<= pageCount; i++) {            
-            Button b = new Button(i+"");   
-            if (i==this.currentPage)
-            {
+        for (long i = 1; i <= pageCount; i++) {
+            Button b = new Button(i + "");
+            if (i == this.currentPage) {
                 b.setDisable(true);
             }
             b.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
                     log.debug(((Button) event.getSource()).getText());
-                    currentPage = (new Integer(((Button) event.getSource()).getText()));                    
+                    currentPage = (new Integer(((Button) event.getSource()).getText()));
                     refreshIncidentList(currentIncidentStatus);
                 }
             });
-            this.buttonPageList.add(b);            
-            this.HBNumButton.getChildren().add(b);            
+            this.buttonPageList.add(b);
+            this.HBNumButton.getChildren().add(b);
             GridPane.setMargin(b, new Insets(10, 10, 10, 10));
         }
-        
+
     }
-    
+
     public void refreshForm() {
         refreshTree();
         refreshIncidentList(null);
@@ -255,7 +252,7 @@ public class FXMLController implements Initializable, controllerInterface {
             //this.currentPage = 1;
             log.debug("refreshIncidentList");
             idAccordion.getPanes().clear();
-            
+
             // Заполняем список инцидентов
             idAccordion.getPanes().clear();
             incedentList = null;
@@ -265,9 +262,9 @@ public class FXMLController implements Initializable, controllerInterface {
             } else {
                 incedentList = (new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
             }
-            
+
             refreshButtonPage();
-                    
+
             for (tIncident incident : incedentList) {
                 // создаем панель с информацией об инциденте
                 AnchorPane panel = new AnchorPane();
@@ -382,7 +379,34 @@ public class FXMLController implements Initializable, controllerInterface {
                             comment.setComment(result.get());
                             comment.setUserId(currentUser.getId());
                             comment.setCommentType(new Long(5));
-                            (new tIncidentCommentDAO(dataSource)).addItem(comment);
+                            long idComment = (new tIncidentCommentDAO(dataSource)).addItem(comment);
+                            // добавляем инцидент на панель инцидентов                          
+                            /*Node parent = (((Button) event.getSource()).getParent()).getParent();
+                            log.info("parent -> " + parent.toString());
+                            ObservableList<Node> compList = ((VBox) parent).getChildren();
+                            compList.forEach((t) -> {
+                               log.info(t.toString());
+                            });*/
+                            log.info("#vComment_" + incident.getId());
+                            log.info(dialogStage.toString());
+                            VBox currentvBox = (VBox) dialogStage.getScene().lookup("#vComment_" + incident.getId());
+                            log.info(currentvBox.toString());
+
+                            int rowNum = comment.getComment().length() / 80;
+                            if (rowNum == 0) {
+                                rowNum++;
+                            }
+                            TextArea t1 = new TextArea(comment.getComment());
+                            t1.setId("idTAMessage_" + idComment);
+                            log.info(t1.getId());
+                            t1.setEditable(false);
+                            t1.setScrollLeft(5);
+                            t1.setPrefHeight(45 * rowNum);
+                            t1.getStyleClass().add("messageQ");
+                            t1.setWrapText(true);
+                            
+                            currentvBox.getChildren().add(t1);
+
                         }
                         result.ifPresent(name -> System.out.println("Your name: " + name));
                     }
@@ -393,6 +417,7 @@ public class FXMLController implements Initializable, controllerInterface {
                 // Добавляем панель с информацией о комментариях к инциденту
                 AnchorPane pComment = new AnchorPane();
                 Accordion panelComment = new Accordion();
+                panelComment.setId("idAccording_" + incident.getId());
 
                 // формируем список комментариев
                 VBox vBox = new VBox();
@@ -402,6 +427,7 @@ public class FXMLController implements Initializable, controllerInterface {
                 VBox.setMargin(hBox, new Insets(10, 10, 10, 10));
 
                 VBox vComment = new VBox();
+                vComment.setId("vComment_" + incident.getId());
 
                 //panel.getChildren().add(gridPane);
                 // Добавляем к панели сообщения
@@ -462,6 +488,7 @@ public class FXMLController implements Initializable, controllerInterface {
         idPCAll.setTitle("Статус заявок");
     }
 
+    // Обновление панели комментариев.
     // Вызов формы "О программе"
     private void showAbout(ActionEvent actionEvent) {
         try {

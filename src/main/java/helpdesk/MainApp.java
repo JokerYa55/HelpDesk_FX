@@ -51,6 +51,7 @@ public class MainApp extends Application {
         showLoginDialog();
         this.mainFormController.setCurrentUser(currentUser);
         this.mainFormController.setDataSource(dataSource);
+        this.mainFormController.setDialogStage(stage);
         this.mainFormController.refreshForm();
     }
 
