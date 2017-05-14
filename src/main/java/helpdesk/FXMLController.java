@@ -362,54 +362,35 @@ public class FXMLController implements Initializable, controllerInterface {
 
                 Button btnComment = new Button("Добавить комментарий");
                 btnComment.setId("idBtnComment");
-                btnComment.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        log.debug("addComment");
-                        log.info(event);
-                        TextInputDialog dialog = new TextInputDialog("walter");
-                        dialog.setTitle("Text Input Dialog");
-                        dialog.setHeaderText("Look, a Text Input Dialog");
-                        dialog.setContentText("Please enter your name:");
-                        Optional<String> result = dialog.showAndWait();
-                        if (result.isPresent()) {
-                            System.out.println("Your name: " + result.get());
-                            tIncidentComment comment = new tIncidentComment();
-                            comment.setIdIncident(incident.getId());
-                            comment.setComment(result.get());
-                            comment.setUserId(currentUser.getId());
-                            comment.setCommentType(new Long(5));
-                            long idComment = (new tIncidentCommentDAO(dataSource)).addItem(comment);
-                            // добавляем инцидент на панель инцидентов                          
-                            /*Node parent = (((Button) event.getSource()).getParent()).getParent();
-                            log.info("parent -> " + parent.toString());
-                            ObservableList<Node> compList = ((VBox) parent).getChildren();
-                            compList.forEach((t) -> {
-                               log.info(t.toString());
-                            });*/
-                            log.info("#vComment_" + incident.getId());
-                            log.info(dialogStage.toString());
-                            VBox currentvBox = (VBox) dialogStage.getScene().lookup("#vComment_" + incident.getId());
-                            log.info(currentvBox.toString());
-
-                            int rowNum = comment.getComment().length() / 80;
-                            if (rowNum == 0) {
-                                rowNum++;
-                            }
-                            TextArea t1 = new TextArea(comment.getComment());
-                            t1.setId("idTAMessage_" + idComment);
-                            log.info(t1.getId());
-                            t1.setEditable(false);
-                            t1.setScrollLeft(5);
-                            t1.setPrefHeight(45 * rowNum);
-                            t1.getStyleClass().add("messageQ");
-                            t1.setWrapText(true);
-                            
-                            currentvBox.getChildren().add(t1);
-
-                        }
-                        result.ifPresent(name -> System.out.println("Your name: " + name));
+                btnComment.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
+                    log.debug("addComment");
+                    log.info(event);
+                    TextInputDialog dialog = new TextInputDialog("walter");
+                    dialog.setTitle("Text Input Dialog");
+                    dialog.setHeaderText("Look, a Text Input Dialog");
+                    dialog.setContentText("Please enter your name:");
+                    Optional<String> result = dialog.showAndWait();
+                    if (result.isPresent()) {
+                        System.out.println("Your name: " + result.get());
+                        tIncidentComment comment = new tIncidentComment();
+                        comment.setIdIncident(incident.getId());
+                        comment.setComment(result.get());
+                        comment.setUserId(currentUser.getId());
+                        comment.setCommentType(new Long(5));
+                        long idComment = (new tIncidentCommentDAO(dataSource)).addItem(comment);
+                        // добавляем инцидент на панель инцидентов
+                        log.info("#vComment_" + incident.getId());
+                        log.info(dialogStage.toString());
+                        VBox currentvBox = (VBox) dialogStage.getScene().lookup("#vComment_" + incident.getId());
+                        log.info(currentvBox.toString());
+                        
+                        int rowNum = comment.getComment().length() / 80;
+                        if (rowNum == 0) {
+                            rowNum++;
+                        }                      
+                        addComment(currentvBox, comment);                       
                     }
+                    result.ifPresent(name -> System.out.println("Your name: " + name));
                 });
                 hBox.getChildren().add(btnComment);
                 hBox.setId("idBoxButton");
@@ -429,33 +410,11 @@ public class FXMLController implements Initializable, controllerInterface {
                 VBox vComment = new VBox();
                 vComment.setId("vComment_" + incident.getId());
 
-                //panel.getChildren().add(gridPane);
                 // Добавляем к панели сообщения
                 // Добавляем сообщения
                 List<tIncidentComment> commentList = (new tIncidentDAO(dataSource)).getIncidentComment(incident);
-                for (tIncidentComment itemComment : commentList) {
-                    String message = itemComment.getUserName() + " : " + itemComment.getDateCreated() + "\n" + itemComment.getComment();
-                    int rowNum = message.length() / 80;
-                    if (rowNum == 0) {
-                        rowNum++;
-                    }
-                    log.debug("rowNum = " + rowNum);
-                    TextArea t1 = new TextArea(message);
-                    t1.setId("idTAMessage_" + itemComment.getId());
-                    log.info(t1.getId());
-                    t1.setEditable(false);
-                    t1.setScrollLeft(5);
-                    t1.setPrefHeight(45 * rowNum);
-                    t1.getStyleClass().add("messageQ");
-                    t1.setWrapText(true);
-                    //vBox.getChildren().add(t1);
-                    vComment.getChildren().add(t1);
-
-                    t1.setStyle("text-area-background: green;");
-                    /*Region region = ( Region ) t1.lookup( ".content" );
-                    region.setStyle( "-fx-background-color: yellow" );*/
-
-                    vComment.setMargin(t1, new Insets(10, 10, 10, 30 * itemComment.getLevel()));
+                for (tIncidentComment itemComment : commentList) {                   
+                    addComment(vComment, itemComment);
                 }
 
                 pComment.getChildren().add(vComment);
@@ -478,6 +437,38 @@ public class FXMLController implements Initializable, controllerInterface {
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    // Добавление комментария
+    private void addComment(Node parentNode, tIncidentComment comment) {
+        try {
+            log.info(parentNode.getClass().getName());
+
+            int rowNum = comment.getComment().length() / 80;
+            if (rowNum == 0) {
+                rowNum++;
+            }
+
+            String message = "ID = " + comment.getId() + " parrentID = " + comment.getParentId() + " Пользователь: " + comment.getUserName() + "Дата : " + comment.getDateCreated() + "\n" + comment.getComment();
+            
+            TextArea textComment = new TextArea(message);
+            textComment.setId("idTAMessage_" + comment.getId());
+            textComment.setEditable(false);
+            textComment.setScrollLeft(5);
+            textComment.setPrefHeight(45 * rowNum);
+            textComment.getStyleClass().add("messageQ");
+            textComment.setWrapText(true);
+            String className = parentNode.getClass().getName(); 
+            switch (className) {
+                case "javafx.scene.layout.VBox": {
+                    ((VBox) parentNode).getChildren().add(textComment);
+                    ((VBox) parentNode).setMargin(textComment, new Insets(10, 10, 10, 30 * comment.getLevel()));
+                }
+            }
+        } catch (Exception e) {
+            log.error("Ошибка : " + e.getMessage());
+        }
+
     }
 
     // Обновление диаграммы
