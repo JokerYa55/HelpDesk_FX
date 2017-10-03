@@ -15,8 +15,7 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.1.240:5432/helpdesk"/>      
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>      
       <property name="hibernate.format_sql" value="true"/>
-      <property name="hibernate.use_sql_comments" value="true"/>
-      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.use_sql_comments" value="true"/>      
     </properties>
   </persistence-unit>
 </persistence>

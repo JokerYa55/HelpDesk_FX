@@ -1,8 +1,6 @@
 package helpdesk;
 
-import DAO.sprUsersDAO;
 import DAO_JPA.TSprUsersDAO;
-import beans.sprUser;
 import beans_JPA.TSprUsers;
 import controllers.LoginFormFXMLController;
 import java.io.IOException;
@@ -88,9 +86,11 @@ public class MainApp extends Application {
             /*
                 <property name="javax.persistence.jdbc.user" value="postgres"/>
                 <property name="javax.persistence.jdbc.password" value="123"/>
+                <property name="hibernate.show_sql" value="true"/>
              */
             emProperties.put("javax.persistence.jdbc.user", userName);
             emProperties.put("javax.persistence.jdbc.password", userPass);
+            emProperties.put("hibernate.show_sql", true);
             // Устанавливаем EntityManager
             this.em = Persistence.createEntityManagerFactory("helpDesk_JPA", emProperties).createEntityManager();
 

@@ -30,6 +30,7 @@ public class TSprUsersDAO implements daoInterface<TSprUsers, Long> {
     }
 
     public TSprUsers getItemByLogin(String name, String password, String jpqName, Class<TSprUsers> cl) {
+        log.debug("getItemByLogin => " + name + " pass = " + password + " jpqNmame => " + jpqName);
         TSprUsers res = null;
         try {
             EntityManager em = getEM();
