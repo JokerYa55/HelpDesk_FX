@@ -1,9 +1,13 @@
 package helpdesk;
 
 import DAO.sprUsersDAO;
+import DAO_JPA.TSprUsersDAO;
 import beans.sprUser;
+import beans_JPA.TSprUsers;
 import controllers.LoginFormFXMLController;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.beans.value.ChangeListener;
@@ -13,6 +17,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
@@ -24,8 +30,9 @@ public class MainApp extends Application {
     private String userName;
     private String userPass;
     private DataSource dataSource;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private FXMLController mainFormController;
+    private EntityManager em;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -49,6 +56,9 @@ public class MainApp extends Application {
 
         stage.show();
         showLoginDialog();
+
+        this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.240:5432/helpdesk", this.userName, this.userPass);
+        log.debug(this.dataSource);
         this.mainFormController.setCurrentUser(currentUser);
         this.mainFormController.setDataSource(dataSource);
         this.mainFormController.setDialogStage(stage);
@@ -58,10 +68,10 @@ public class MainApp extends Application {
     public void showLoginDialog() {
         try {
             Stage stage = new Stage();
-            log.debug("showDialog");
+            log.debug("showLoginDialog");
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
-            Parent root = loader.load();
+            Parent rootLocal = loader.load();
             LoginFormFXMLController control = loader.getController();
             log.info(control);
             control.setMain(this);
@@ -69,27 +79,32 @@ public class MainApp extends Application {
             stage.setMinHeight(150);
             stage.setMinWidth(300);
             stage.setResizable(false);
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(rootLocal));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(sceneMain.getWindow());
             stage.showAndWait();
-            this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.240:5432/helpdesk", this.userName, this.userPass);
-            log.debug(this.dataSource);
-            this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
+
+            Map emProperties = new HashMap();
+            /*
+                <property name="javax.persistence.jdbc.user" value="postgres"/>
+                <property name="javax.persistence.jdbc.password" value="123"/>
+             */
+            emProperties.put("javax.persistence.jdbc.user", userName);
+            emProperties.put("javax.persistence.jdbc.password", userPass);
+            // Устанавливаем EntityManager
+            this.em = Persistence.createEntityManagerFactory("helpDesk_JPA", emProperties).createEntityManager();
 
             // Получаем текущего пользователя
-            this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
-            this.mainFormController.setStatusPanelUser(this.currentUser.getName());
+            this.currentUser = (new TSprUsersDAO(em)).getItemByLogin(userName, userPass, "TSprUsers.findByFLogin", TSprUsers.class);
+            log.debug("currentUser => " + this.currentUser);
+            //= (new sprUsersDAO(dataSource)).getItemByName(userName);
+            this.mainFormController.setStatusPanelUser(this.currentUser.getFName());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
      *
      * @param args the command line arguments
      */
@@ -103,5 +118,13 @@ public class MainApp extends Application {
 
     public void setUserPass(String userPass) {
         this.userPass = userPass;
+    }
+
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 }

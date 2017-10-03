@@ -5,12 +5,9 @@
  */
 package interfaces;
 
-import beans.sprUser;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import beans_JPA.TSprUsers;
 import javafx.stage.Stage;
 import javax.sql.DataSource;
-import util.formLocator;
 
 /**
  *
@@ -22,7 +19,7 @@ public interface controllerInterface {
 
     public void setDialogStage(Stage dialogStage);
 
-    public void setCurrentUser(sprUser currentUser);
+    public void setCurrentUser(TSprUsers currentUser);
     
     public void initForm();
     

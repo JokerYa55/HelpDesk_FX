@@ -8,6 +8,7 @@ package DAO_JPA;
 import beans_JPA.TSprUsers;
 import interfaces.daoInterface;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
 /**
@@ -26,6 +27,21 @@ public class TSprUsersDAO implements daoInterface<TSprUsers, Long> {
     @Override
     public EntityManager getEM() {
         return em;
+    }
+
+    public TSprUsers getItemByLogin(String name, String password, String jpqName, Class<TSprUsers> cl) {
+        TSprUsers res = null;
+        try {
+            EntityManager em = getEM();
+            TypedQuery<TSprUsers> namedQuery = em.createNamedQuery(jpqName, cl);
+            // :fLogin and t.fPass = :fPass
+            namedQuery.setParameter("fPass", password);
+            namedQuery.setParameter("fLogin", name);
+            res = namedQuery.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
 }

@@ -14,6 +14,7 @@ import beans.sprIncidentStatus;
 import beans.sprService;
 import beans.sprUser;
 import beans.tIncident;
+import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.time.Instant;
@@ -51,7 +52,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
     private final Logger log = Logger.getLogger(UpdIncidentController.class);
     private tIncident incident = null;
     private Stage dialogStage;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private DataSource dataSource;    
     private btnStatus formResult = btnStatus.btnCancel; 
 
@@ -151,7 +152,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
 
     }
 
-    public sprUser getCurrentUser() {
+    public TSprUsers getCurrentUser() {
         return currentUser;
     }
 
@@ -161,7 +162,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
     }
 
     @Override
-    public void setCurrentUser(sprUser currentUser) {
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 

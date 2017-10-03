@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "TSprUsers.findAll", query = "SELECT t FROM TSprUsers t")
     , @NamedQuery(name = "TSprUsers.findById", query = "SELECT t FROM TSprUsers t WHERE t.id = :id")
-    , @NamedQuery(name = "TSprUsers.findByFLogin", query = "SELECT t FROM TSprUsers t WHERE t.fLogin = :fLogin")
+    , @NamedQuery(name = "TSprUsers.findByFLogin", query = "SELECT t FROM TSprUsers t WHERE t.fLogin = :fLogin and t.fPass = :fPass")
     , @NamedQuery(name = "TSprUsers.findByFPass", query = "SELECT t FROM TSprUsers t WHERE t.fPass = :fPass")
     , @NamedQuery(name = "TSprUsers.findByFName", query = "SELECT t FROM TSprUsers t WHERE t.fName = :fName")})
 public class TSprUsers implements Serializable {

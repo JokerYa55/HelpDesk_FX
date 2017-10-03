@@ -8,6 +8,7 @@ package controllers;
 import DAO.sprServiceDAO;
 import beans.sprService;
 import beans.sprUser;
+import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.util.List;
@@ -38,7 +39,7 @@ public class SprServiceController implements Initializable, controllerInterface 
      */
     private final Logger log = Logger.getLogger(SprServiceController.class);
     private Stage dialogStage;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private DataSource dataSource;
 
     @FXML
@@ -61,7 +62,7 @@ public class SprServiceController implements Initializable, controllerInterface 
     }
 
     @Override
-    public void setCurrentUser(sprUser currentUser) {
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 

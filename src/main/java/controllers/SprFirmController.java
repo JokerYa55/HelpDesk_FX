@@ -8,6 +8,7 @@ package controllers;
 import DAO.sprFirmDAO;
 import beans.sprFirm;
 import beans.sprUser;
+import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.util.List;
@@ -40,7 +41,7 @@ public class SprFirmController implements Initializable, controllerInterface {
      */
     private final Logger log = Logger.getLogger(SprFirmController.class);
     private Stage dialogStage;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private DataSource dataSource;
 
     @FXML
@@ -70,7 +71,7 @@ public class SprFirmController implements Initializable, controllerInterface {
     }
 
     @Override
-    public void setCurrentUser(sprUser currentUser) {
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 

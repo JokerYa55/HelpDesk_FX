@@ -6,6 +6,7 @@
 package controllers;
 
 import beans.sprUser;
+import beans_JPA.TSprUsers;
 import helpdesk.MainApp;
 import interfaces.controllerInterface;
 import java.io.File;
@@ -40,7 +41,7 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
     public MainApp main;
     private Stage dialogStage;
     private DataSource dataSource;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private final Logger log = Logger.getLogger(LoginFormFXMLController.class);
 
     @FXML
@@ -134,7 +135,7 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
     }
 
     @Override
-    public void setCurrentUser(sprUser currentUser) {
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 

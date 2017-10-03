@@ -4,9 +4,9 @@ import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentCommentDAO;
 import DAO.tIncidentDAO;
 import beans.sprIncidentStatus;
-import beans.sprUser;
 import beans.tIncident;
 import beans.tIncidentComment;
+import beans_JPA.TSprUsers;
 import controllers.AddIncidentController;
 import controllers.SprFirmController;
 import controllers.SprServiceController;
@@ -63,7 +63,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
     private final Logger log = Logger.getLogger(FXMLController.class);
     private DataSource dataSource;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private Stage dialogStage;
     private sprIncidentStatus currentIncidentStatus;
     private List<Button> buttonPageList = new ArrayList<>();
@@ -631,7 +631,7 @@ public class FXMLController implements Initializable, controllerInterface {
     }
 
     @Override
-    public void setCurrentUser(sprUser currentUser) {
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 
