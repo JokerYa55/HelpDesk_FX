@@ -101,7 +101,9 @@ public class TSprIncidentStatus implements Serializable {
 
     @Override
     public String toString() {
-        return "beans_JPA.TSprIncidentStatus[ id=" + id + " ]";
+        return fName;
     }
+
+    
     
 }

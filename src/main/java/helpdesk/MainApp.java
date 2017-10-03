@@ -60,6 +60,7 @@ public class MainApp extends Application {
         this.mainFormController.setCurrentUser(currentUser);
         this.mainFormController.setDataSource(dataSource);
         this.mainFormController.setDialogStage(stage);
+        this.mainFormController.setEm(em);
         this.mainFormController.refreshForm();
     }
 
@@ -83,11 +84,6 @@ public class MainApp extends Application {
             stage.showAndWait();
 
             Map emProperties = new HashMap();
-            /*
-                <property name="javax.persistence.jdbc.user" value="postgres"/>
-                <property name="javax.persistence.jdbc.password" value="123"/>
-                <property name="hibernate.show_sql" value="true"/>
-             */
             emProperties.put("javax.persistence.jdbc.user", userName);
             emProperties.put("javax.persistence.jdbc.password", userPass);
             emProperties.put("hibernate.show_sql", true);

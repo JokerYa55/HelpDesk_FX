@@ -3,9 +3,11 @@ package helpdesk;
 import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentCommentDAO;
 import DAO.tIncidentDAO;
+import DAO_JPA.TSprIncidentStatusDAO;
 import beans.sprIncidentStatus;
 import beans.tIncident;
 import beans.tIncidentComment;
+import beans_JPA.TSprIncidentStatus;
 import beans_JPA.TSprUsers;
 import controllers.AddIncidentController;
 import controllers.SprFirmController;
@@ -54,6 +56,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import util.utils.btnStatus;
@@ -65,6 +68,7 @@ public class FXMLController implements Initializable, controllerInterface {
     private DataSource dataSource;
     private TSprUsers currentUser;
     private Stage dialogStage;
+    private EntityManager em;
     private sprIncidentStatus currentIncidentStatus;
     private List<Button> buttonPageList = new ArrayList<>();
     private List<tIncident> incedentList;
@@ -207,7 +211,8 @@ public class FXMLController implements Initializable, controllerInterface {
         try {
             log.info("refreshTree()");
             //idTreeView.getRoot().getChildren().clear();
-            List<sprIncidentStatus> itemList = (new sprIncidentStatusDAO(dataSource)).getItemList();
+            List<TSprIncidentStatus> itemList = (new TSprIncidentStatusDAO(em)).getList("TSprIncidentStatus.findAll", TSprIncidentStatus.class, null);
+                    //(new sprIncidentStatusDAO(dataSource)).getItemList();
 
             ImageView imV = new ImageView(new Image(getClass().getResourceAsStream("/icons/open_mono.png")));
             imV.setFitHeight(16);
@@ -216,7 +221,7 @@ public class FXMLController implements Initializable, controllerInterface {
             TreeItem<sprIncidentStatus> rootItem = new TreeItem("Статус", rootIcon);
 
             rootItem.setExpanded(true);
-            for (sprIncidentStatus item : itemList) {
+            for (TSprIncidentStatus item : itemList) {
 
                 ImageView imV1 = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder_mono.png")));
                 imV1.setFitHeight(16);
@@ -644,5 +649,13 @@ public class FXMLController implements Initializable, controllerInterface {
     public void initForm() {
         log.debug("initForm");
         idTreeView.getStyleClass().add("my-tree-view");
+    }
+
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 }

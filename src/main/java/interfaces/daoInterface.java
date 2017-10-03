@@ -142,11 +142,8 @@ public interface daoInterface<T, V> {
                         plimit = (int) value;
                     }
                 }
-//                params.forEach((key, val) -> {
-//                    
-//                });
             }
-            //namedQuery.setParameter("id", id);
+
             if (plimit == 0) {
                 res = namedQuery.getResultList();
             } else {

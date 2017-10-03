@@ -35,7 +35,6 @@ public class TSprUsersDAO implements daoInterface<TSprUsers, Long> {
         try {
             EntityManager em = getEM();
             TypedQuery<TSprUsers> namedQuery = em.createNamedQuery(jpqName, cl);
-            // :fLogin and t.fPass = :fPass
             namedQuery.setParameter("fPass", password);
             namedQuery.setParameter("fLogin", name);
             res = namedQuery.getSingleResult();
