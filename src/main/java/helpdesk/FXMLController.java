@@ -3,10 +3,14 @@ package helpdesk;
 import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentCommentDAO;
 import DAO.tIncidentDAO;
+import DAO_JPA.TIncidentCommentDAO;
+import DAO_JPA.TIncidentDAO;
 import DAO_JPA.TSprIncidentStatusDAO;
 import beans.sprIncidentStatus;
 import beans.tIncident;
 import beans.tIncidentComment;
+import beans_JPA.TIncident;
+import beans_JPA.TIncidentComment;
 import beans_JPA.TSprIncidentStatus;
 import beans_JPA.TSprUsers;
 import controllers.AddIncidentController;
@@ -16,7 +20,9 @@ import controllers.UpdIncidentController;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -71,7 +77,7 @@ public class FXMLController implements Initializable, controllerInterface {
     private EntityManager em;
     private sprIncidentStatus currentIncidentStatus;
     private List<Button> buttonPageList = new ArrayList<>();
-    private List<tIncident> incedentList;
+    private List<TIncident> incedentList;
     private int currentPage = 1;
 
     @FXML
@@ -263,14 +269,16 @@ public class FXMLController implements Initializable, controllerInterface {
             incedentList = null;
             log.debug(id);
             if (id == null) {
-                incedentList = (new tIncidentDAO(dataSource)).getItemList(this.currentPage);
+                incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
+                        //(new tIncidentDAO(dataSource)).getItemList(this.currentPage);
             } else {
-                incedentList = (new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
+                incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
+                        //(new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
             }
 
-            refreshButtonPage();
+           // refreshButtonPage();
 
-            for (tIncident incident : incedentList) {
+            for (TIncident incident : incedentList) {
                 // создаем панель с информацией об инциденте
                 AnchorPane panel = new AnchorPane();
                 GridPane gridPane = new GridPane();
@@ -289,7 +297,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
                 // Добавляем фирму 
                 Label labelFirm = new Label("Фирма");
-                TextField fFirm = new TextField(incident.getFFirmName());
+                TextField fFirm = new TextField(incident.getFFirmId().getFName());
                 GridPane.setConstraints(labelFirm, 0, 1);
                 gridPane.getChildren().add(labelFirm);
                 GridPane.setConstraints(fFirm, 1, 1);
@@ -297,7 +305,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
                 // Добавляем услугу 
                 Label labelService = new Label("Сервис");
-                TextField fService = new TextField(incident.getFServiceName());
+                TextField fService = new TextField(incident.getFServiceId().getFName());
                 GridPane.setConstraints(labelService, 0, 2);
                 gridPane.getChildren().add(labelService);
                 GridPane.setConstraints(fService, 1, 2);
@@ -322,7 +330,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
                 // Добавляем пользователя 
                 Label labelUser = new Label("Пользователь");
-                TextField fUser = new TextField(incident.getFUserName());
+                TextField fUser = new TextField(incident.getFUserId().getFName());
                 GridPane.setConstraints(labelUser, 2, 2);
                 gridPane.getChildren().add(labelUser);
                 GridPane.setConstraints(fUser, 3, 2);
@@ -344,7 +352,7 @@ public class FXMLController implements Initializable, controllerInterface {
                         Optional<ButtonType> result = alertForm.showAndWait();
                         if (result.get() == ButtonType.OK) {
                             log.info(result.get());
-                            (new tIncidentDAO(dataSource)).deleteItem(incident);
+                            (new TIncidentDAO(em)).deleteItem(incident);
                         } else {
                             log.info(result.get());
                         }
@@ -360,7 +368,7 @@ public class FXMLController implements Initializable, controllerInterface {
                     public void handle(MouseEvent event) {
                         log.info(incident);
                         //((Node)event.getSource()).
-                        showUpdIncidentForm(((Node) event.getSource()).getScene().getWindow(), incident);
+                        //showUpdIncidentForm(((Node) event.getSource()).getScene().getWindow(), incident);
                     }
                 });
                 hBox.getChildren().add(btnEdit);
@@ -417,9 +425,11 @@ public class FXMLController implements Initializable, controllerInterface {
 
                 // Добавляем к панели сообщения
                 // Добавляем сообщения
-                List<tIncidentComment> commentList = (new tIncidentDAO(dataSource)).getIncidentComment(incident);
-                for (tIncidentComment itemComment : commentList) {                   
-                    addComment(vComment, itemComment);
+                Map<String, Object> param = new HashMap();
+                param.put("idIncident", incident);
+                List<TIncidentComment> commentList = (new TIncidentCommentDAO(em)).getList("TIncidentComment.findByIncident", TIncidentComment.class, param);
+                for (TIncidentComment itemComment : commentList) {                   
+                    //addComment(vComment, itemComment);
                 }
 
                 pComment.getChildren().add(vComment);
@@ -432,7 +442,7 @@ public class FXMLController implements Initializable, controllerInterface {
 
                 // Добавляем панель с кнопками на грид               
                 // Добавляем контейнер VBox
-                TitledPane tp = new TitledPane(String.format("Инцидент № %1$d от %2$tF \nСтатус: %3$s\nФирма: %4$s", incident.getId(), incident.getFDate(), incident.getFIncidentStatusName(), incident.getFFirmName()), panel);
+                TitledPane tp = new TitledPane(String.format("Инцидент № %1$d от %2$tF \nСтатус: %3$s\nФирма: %4$s", incident.getId(), incident.getFDate(), incident.getFIncidentStatusId().getFName(), incident.getFFirmId().getFName()), panel);
                 tp.getStyleClass().add("incidentErr");
                 tp.setOnMousePressed((MouseEvent event) -> {
                     log.debug(incident);

@@ -33,6 +33,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "TIncidentComment.findAll", query = "SELECT t FROM TIncidentComment t")
     , @NamedQuery(name = "TIncidentComment.findById", query = "SELECT t FROM TIncidentComment t WHERE t.id = :id")
     , @NamedQuery(name = "TIncidentComment.findByFDateCreated", query = "SELECT t FROM TIncidentComment t WHERE t.fDateCreated = :fDateCreated")
+    , @NamedQuery(name = "TIncidentComment.findByIncident", query = "SELECT t FROM TIncidentComment t WHERE t.idIncident = :idIncident")
     , @NamedQuery(name = "TIncidentComment.findByFComment", query = "SELECT t FROM TIncidentComment t WHERE t.fComment = :fComment")})
 public class TIncidentComment implements Serializable {
 
@@ -163,5 +164,5 @@ public class TIncidentComment implements Serializable {
     public String toString() {
         return "beans_JPA.TIncidentComment[ id=" + id + " ]";
     }
-    
+
 }
