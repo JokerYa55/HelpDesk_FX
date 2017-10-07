@@ -17,6 +17,8 @@ import controllers.AddIncidentController;
 import controllers.SprFirmController;
 import controllers.SprServiceController;
 import controllers.UpdIncidentController;
+import dialogUtil.dialogType;
+import dialogUtil.pDialog;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.util.ArrayList;
@@ -79,6 +81,7 @@ public class FXMLController implements Initializable, controllerInterface {
     private List<Button> buttonPageList = new ArrayList<>();
     private List<TIncident> incedentList;
     private int currentPage = 1;
+    
 
     @FXML
     private Label label;
@@ -630,6 +633,19 @@ public class FXMLController implements Initializable, controllerInterface {
         }
     }
 
+    // Вызов формы справочника фирм
+    @FXML
+    private void showSprClientForm(ActionEvent actionEvent) {
+        try {            
+            log.debug("showSprServiceForm");
+            pDialog clientDialog = new pDialog("/fxml/sprClient", dialogType.MODAL);
+            clientDialog.getPWnd().getStage().setTitle("Справочник клиентов");
+            clientDialog.showModal(idMBMainMenu.getScene().getWindow());
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -666,6 +682,11 @@ public class FXMLController implements Initializable, controllerInterface {
     }
 
     public void setEm(EntityManager em) {
+        this.em = em;
+    }
+
+    @Override
+    public void setEM(EntityManager em) {
         this.em = em;
     }
 }

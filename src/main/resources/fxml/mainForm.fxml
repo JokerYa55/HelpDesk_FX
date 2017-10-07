@@ -59,7 +59,7 @@
             <Menu mnemonicParsing="false" text="Справочники">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#showSprFirmForm" text="Справочник фирм" />
-                  <MenuItem mnemonicParsing="false" text="Справочник клиентов" />
+                  <MenuItem mnemonicParsing="false" onAction="#showSprClientForm" text="Справочник клиентов" />
                   <MenuItem mnemonicParsing="false" onAction="#showSprServiceForm" text="Справочник услуг" />
               </items>
             </Menu>

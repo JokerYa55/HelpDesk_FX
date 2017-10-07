@@ -7,7 +7,6 @@ package controllers;
 
 import DAO.sprFirmDAO;
 import beans.sprFirm;
-import beans.sprUser;
 import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
 import java.net.URL;
@@ -26,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
@@ -43,6 +43,7 @@ public class SprFirmController implements Initializable, controllerInterface {
     private Stage dialogStage;
     private TSprUsers currentUser;
     private DataSource dataSource;
+    private EntityManager em;
 
     @FXML
     TableView<sprFirm> idTVMainData;
@@ -113,5 +114,10 @@ public class SprFirmController implements Initializable, controllerInterface {
             log.error(e);
         }
 
+    }
+
+    @Override
+    public void setEM(EntityManager em) {
+        this.em = em;
     }
 }

@@ -6,6 +6,7 @@
 package interfaces;
 
 import dialogUtil.pWnd;
+import javafx.stage.Window;
 
 /**
  *
@@ -14,6 +15,7 @@ import dialogUtil.pWnd;
 public interface dailogInterface<T> {
     //public pWnd<T> createDialog();    
     public void show();
+    public void showModal(Window parentWnd);
     public void close();
     public pWnd<T> getPWnd();
 }

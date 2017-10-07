@@ -24,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import util.appPropertys;
@@ -43,6 +44,7 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
     private DataSource dataSource;
     private TSprUsers currentUser;
     private final Logger log = Logger.getLogger(LoginFormFXMLController.class);
+    private EntityManager em;
 
     @FXML
     Button btnClose;
@@ -142,6 +144,11 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
     @Override
     public void initForm() {
         log.debug("initForm");
+    }
+
+    @Override
+    public void setEM(EntityManager em) {
+        this.em = em;
     }
 
 }

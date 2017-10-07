@@ -7,6 +7,7 @@ package interfaces;
 
 import beans_JPA.TSprUsers;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 /**
@@ -15,13 +16,15 @@ import javax.sql.DataSource;
  */
 public interface controllerInterface {
 
+    public void setEM(EntityManager em);
+
     public void setDataSource(DataSource dataSource);
 
     public void setDialogStage(Stage dialogStage);
 
     public void setCurrentUser(TSprUsers currentUser);
-    
+
     public void initForm();
-    
+
     //public formLocator showDialog(DataSource dataSource, Stage stage, Parent root, String windowCaption);
 }

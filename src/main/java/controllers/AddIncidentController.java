@@ -10,7 +10,6 @@ import DAO.sprServiceDAO;
 import DAO.tIncidentDAO;
 import beans.sprFirm;
 import beans.sprService;
-import beans.sprUser;
 import beans.tIncident;
 import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
@@ -31,6 +30,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import util.utils;
@@ -50,7 +50,8 @@ public class AddIncidentController implements Initializable, controllerInterface
     private Stage dialogStage;
     private TSprUsers currentUser;
     private DataSource dataSource;
-    private utils.btnStatus formResult = utils.btnStatus.btnCancel; 
+    private utils.btnStatus formResult = utils.btnStatus.btnCancel;
+    private EntityManager em;
 
     @FXML
     DatePicker idDPFDate;
@@ -129,6 +130,11 @@ public class AddIncidentController implements Initializable, controllerInterface
         // TODO
         log.info("initialize -> " + url);
 
+    }
+
+    @Override
+    public void setEM(EntityManager em) {
+        this.em = em;
     }
 
     @Override

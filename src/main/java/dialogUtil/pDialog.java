@@ -7,7 +7,9 @@ package dialogUtil;
 
 import interfaces.dailogInterface;
 import javafx.fxml.FXMLLoader;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 
@@ -16,14 +18,14 @@ import org.apache.log4j.Priority;
  * @author vasil
  * @param <T>
  */
-public class Dialog<T> implements dailogInterface<T> {
+public class pDialog<T> implements dailogInterface<T> {
 
     private final Logger log = Logger.getLogger(getClass().getName());
     private String resourceName = null;
     private final pWnd<T> pDialog;
-    private final dialogType dType;
+    private dialogType dType;
 
-    public Dialog(String resourceName, dialogType type) {
+    public pDialog(String resourceName, dialogType type) {
         this.resourceName = resourceName;
         this.pDialog = createDialog();
         this.dType = type;
@@ -51,11 +53,9 @@ public class Dialog<T> implements dailogInterface<T> {
 
     @Override
     public void show() {
-        if (dType == dialogType.FORM) {
-            this.pDialog.getStage().show();
-        } else {
-            this.pDialog.getStage().showAndWait();
-        }
+        dType = dialogType.FORM;
+        this.pDialog.getStage().show();
+
     }
 
     @Override
@@ -69,6 +69,15 @@ public class Dialog<T> implements dailogInterface<T> {
 
     public void setResourceName(String resourceName) {
         this.resourceName = resourceName;
+    }
+
+    @Override
+    public void showModal(Window parentWnd) {
+        this.dType = dialogType.MODAL;
+        this.pDialog.getStage().initModality(Modality.WINDOW_MODAL);
+        this.pDialog.getStage().initOwner(parentWnd);
+        this.pDialog.getStage().showAndWait();
+
     }
 
 }
