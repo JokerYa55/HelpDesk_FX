@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 /**
  *
@@ -35,7 +36,9 @@ public class incidentPanel extends AnchorPane {
     private final Label labelUser = new Label("Пользователь");
     private TextField fUser;
     private TIncident incident;
-
+    private commentPanel cPanel;
+    private incidentButtonPanel buttonPanel;
+    
     public incidentPanel(TIncident incident) {
         this.incident = incident;
     }
