@@ -8,6 +8,7 @@ import DAO_JPA.TSprIncidentStatusDAO;
 import beans.tIncidentComment;
 import beans_JPA.TIncident;
 import beans_JPA.TIncidentComment;
+import beans_JPA.TSprCommentType;
 import beans_JPA.TSprIncidentStatus;
 import beans_JPA.TSprUsers;
 import dialogUtil.dialogType;
@@ -61,6 +62,7 @@ import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import util.utils.btnStatus;
 import static util.utils.getLocalDate;
 
@@ -75,7 +77,6 @@ public class mainController implements Initializable, controllerInterface {
     private List<Button> buttonPageList = new ArrayList<>();
     private List<TIncident> incedentList;
     private int currentPage = 1;
-    
 
     @FXML
     private Label label;
@@ -218,7 +219,7 @@ public class mainController implements Initializable, controllerInterface {
             log.info("refreshTree()");
             //idTreeView.getRoot().getChildren().clear();
             List<TSprIncidentStatus> itemList = (new TSprIncidentStatusDAO(em)).getList("TSprIncidentStatus.findAll", TSprIncidentStatus.class, null);
-                    //(new sprIncidentStatusDAO(dataSource)).getItemList();
+            //(new sprIncidentStatusDAO(dataSource)).getItemList();
 
             ImageView imV = new ImageView(new Image(getClass().getResourceAsStream("/icons/open_mono.png")));
             imV.setFitHeight(16);
@@ -229,7 +230,7 @@ public class mainController implements Initializable, controllerInterface {
             rootItem.setExpanded(true);
             for (TSprIncidentStatus item : itemList) {
                 log.debug("item => " + item + " incCount => " + item.getTIncidentCollection().size());
-                
+
                 ImageView imV1 = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder_mono.png")));
                 imV1.setFitHeight(16);
                 imV1.setFitWidth(16);
@@ -239,14 +240,13 @@ public class mainController implements Initializable, controllerInterface {
                 rootItem.getChildren().add(node);
             }
 
-            
-            
             idTreeView.setRoot(rootItem);
             idTreeView.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     log.debug(event);
                     if (idTreeView.getSelectionModel().getSelectedItem().getValue() instanceof TSprIncidentStatus) {
+                        
                         currentIncidentStatus = idTreeView.getSelectionModel().getSelectedItem().getValue();
                         refreshIncidentList(currentIncidentStatus);
                     } else {
@@ -261,7 +261,8 @@ public class mainController implements Initializable, controllerInterface {
 
     /**
      * Обновляет список инцидентов для определенного статуса
-     * @param id 
+     *
+     * @param id
      */
     private void refreshIncidentList(TSprIncidentStatus item) {
         try {
@@ -270,26 +271,20 @@ public class mainController implements Initializable, controllerInterface {
             log.debug("refreshIncidentList");
             idAccordion.getPanes().clear();
 
-           
-            
             // Заполняем список инцидентов
             idAccordion.getPanes().clear();
             incedentList = null;
             //log.debug(id);
-            if (item == null) {
-                //incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
-                 incedentList  = new LinkedList<>(item.getTIncidentCollection());
-//                incList.forEach((t) -> {
-//                    log.debug("t => " + t);
-//                });
-                        //(new tIncidentDAO(dataSource)).getItemList(this.currentPage);
-            } else {
-                incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
-                        //(new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
-            }
+            incedentList = new LinkedList<>(item.getTIncidentCollection());
+//            if (item == null) {
+//                //incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
+//                incedentList = new LinkedList<>(item.getTIncidentCollection());
+//            } else {
+//                //incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
+//                //(new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
+//            }
 
-           // refreshButtonPage();
-
+            // refreshButtonPage();
             for (TIncident incident : incedentList) {
                 // создаем панель с информацией об инциденте
                 AnchorPane panel = new AnchorPane();
@@ -397,23 +392,23 @@ public class mainController implements Initializable, controllerInterface {
                     Optional<String> result = dialog.showAndWait();
                     if (result.isPresent()) {
                         System.out.println("Your name: " + result.get());
-                        tIncidentComment comment = new tIncidentComment();
-                        comment.setIdIncident(incident.getId());
-                        comment.setComment(result.get());
-                        comment.setUserId(currentUser.getId());
-                        comment.setCommentType(new Long(5));
-                        long idComment = (new tIncidentCommentDAO(dataSource)).addItem(comment);
+                        TIncidentComment comment = new TIncidentComment();
+                        comment.setIdIncident(incident);
+                        comment.setFComment(result.get());
+                        comment.setFUserId(currentUser);
+                        comment.setFCommentTypeId(new TSprCommentType(new Long(5)));
+                        //long idComment = (new tIncidentCommentDAO(dataSource)).addItem(comment);
                         // добавляем инцидент на панель инцидентов
                         log.info("#vComment_" + incident.getId());
                         log.info(dialogStage.toString());
                         VBox currentvBox = (VBox) dialogStage.getScene().lookup("#vComment_" + incident.getId());
                         log.info(currentvBox.toString());
-                        
-                        int rowNum = comment.getComment().length() / 80;
+
+                        int rowNum = comment.getFComment().length() / 80;
                         if (rowNum == 0) {
                             rowNum++;
-                        }                      
-                        addComment(currentvBox, comment);                       
+                        }
+                        addComment(currentvBox, comment);
                     }
                     result.ifPresent(name -> System.out.println("Your name: " + name));
                 });
@@ -439,9 +434,10 @@ public class mainController implements Initializable, controllerInterface {
                 // Добавляем сообщения
                 Map<String, Object> param = new HashMap();
                 param.put("idIncident", incident);
-                List<TIncidentComment> commentList = (new TIncidentCommentDAO(em)).getList("TIncidentComment.findByIncident", TIncidentComment.class, param);
-                for (TIncidentComment itemComment : commentList) {                   
-                    //addComment(vComment, itemComment);
+                List<TIncidentComment> commentList = new LinkedList<>(incident.getTIncidentCommentCollection()) ;
+                        //(new TIncidentCommentDAO(em)).getList("TIncidentComment.findByIncident", TIncidentComment.class, param);
+                for (TIncidentComment itemComment : commentList) {
+                    addComment(vComment, itemComment);
                 }
 
                 pComment.getChildren().add(vComment);
@@ -467,17 +463,17 @@ public class mainController implements Initializable, controllerInterface {
     }
 
     // Добавление комментария
-    private void addComment(Node parentNode, tIncidentComment comment) {
+    private void addComment(Node parentNode, TIncidentComment comment) {
         try {
             log.info(parentNode.getClass().getName());
 
-            int rowNum = comment.getComment().length() / 80;
+            int rowNum = comment.getFComment().length() / 80;
             if (rowNum == 0) {
                 rowNum++;
             }
 
-            String message = "ID = " + comment.getId() + " parrentID = " + comment.getParentId() + " Пользователь: " + comment.getUserName() + "Дата : " + comment.getDateCreated() + "\n" + comment.getComment();
-            
+            String message = "ID = " + comment.getId() + " parrentID = " + comment.getFParentId().getId() + " Пользователь: " + comment.getFUserId().getFName() + "Дата : " + comment.getFDateCreated() + "\n" + comment.getFComment();
+
             TextArea textComment = new TextArea(message);
             textComment.setId("idTAMessage_" + comment.getId());
             textComment.setEditable(false);
@@ -485,15 +481,15 @@ public class mainController implements Initializable, controllerInterface {
             textComment.setPrefHeight(45 * rowNum);
             textComment.getStyleClass().add("messageQ");
             textComment.setWrapText(true);
-            String className = parentNode.getClass().getName(); 
+            String className = parentNode.getClass().getName();
             switch (className) {
                 case "javafx.scene.layout.VBox": {
                     ((VBox) parentNode).getChildren().add(textComment);
-                    ((VBox) parentNode).setMargin(textComment, new Insets(10, 10, 10, 30 * comment.getLevel()));
+                    ((VBox) parentNode).setMargin(textComment, new Insets(10, 10, 10, 30));
                 }
             }
         } catch (Exception e) {
-            log.error("Ошибка : " + e.getMessage());
+            log.log(Priority.ERROR, e);
         }
 
     }
@@ -645,7 +641,7 @@ public class mainController implements Initializable, controllerInterface {
     // Вызов формы справочника фирм
     @FXML
     private void showSprClientForm(ActionEvent actionEvent) {
-        try {            
+        try {
             log.debug("showSprServiceForm");
             pDialog clientDialog = new pDialog("/fxml/sprClient", dialogType.MODAL);
             clientDialog.getPWnd().getStage().setTitle("Справочник клиентов");
@@ -654,7 +650,7 @@ public class mainController implements Initializable, controllerInterface {
             log.error(e);
         }
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
