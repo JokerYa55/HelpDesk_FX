@@ -1,5 +1,6 @@
 package helpdesk;
 
+import controllers.mainController;
 import DAO_JPA.TSprUsersDAO;
 import beans_JPA.TSprUsers;
 import controllers.LoginFormFXMLController;
@@ -29,7 +30,7 @@ public class MainApp extends Application {
     private String userPass;
     private DataSource dataSource;
     private TSprUsers currentUser;
-    private FXMLController mainFormController;
+    private mainController mainFormController;
     private EntityManager em;
 
     @Override

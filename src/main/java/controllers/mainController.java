@@ -1,4 +1,4 @@
-package helpdesk;
+package controllers;
 
 import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentCommentDAO;
@@ -70,9 +70,9 @@ import org.apache.log4j.Logger;
 import util.utils.btnStatus;
 import static util.utils.getLocalDate;
 
-public class FXMLController implements Initializable, controllerInterface {
+public class mainController implements Initializable, controllerInterface {
 
-    private final Logger log = Logger.getLogger(FXMLController.class);
+    private final Logger log = Logger.getLogger(mainController.class);
     private DataSource dataSource;
     private TSprUsers currentUser;
     private Stage dialogStage;
