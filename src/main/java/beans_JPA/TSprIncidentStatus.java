@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +41,7 @@ public class TSprIncidentStatus implements Serializable {
     @Basic(optional = false)
     @Column(name = "f_name")
     private String fName;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fIncidentStatusId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fIncidentStatusId", fetch = FetchType.LAZY)
     private Collection<TIncident> tIncidentCollection;
 
     public TSprIncidentStatus() {

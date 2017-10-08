@@ -1,28 +1,22 @@
 package controllers;
 
-import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentCommentDAO;
 import DAO.tIncidentDAO;
 import DAO_JPA.TIncidentCommentDAO;
 import DAO_JPA.TIncidentDAO;
 import DAO_JPA.TSprIncidentStatusDAO;
-import beans.sprIncidentStatus;
-import beans.tIncident;
 import beans.tIncidentComment;
 import beans_JPA.TIncident;
 import beans_JPA.TIncidentComment;
 import beans_JPA.TSprIncidentStatus;
 import beans_JPA.TSprUsers;
-import controllers.AddIncidentController;
-import controllers.SprFirmController;
-import controllers.SprServiceController;
-import controllers.UpdIncidentController;
 import dialogUtil.dialogType;
 import dialogUtil.pDialog;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -77,7 +71,7 @@ public class mainController implements Initializable, controllerInterface {
     private TSprUsers currentUser;
     private Stage dialogStage;
     private EntityManager em;
-    private sprIncidentStatus currentIncidentStatus;
+    private TSprIncidentStatus currentIncidentStatus;
     private List<Button> buttonPageList = new ArrayList<>();
     private List<TIncident> incedentList;
     private int currentPage = 1;
@@ -102,7 +96,7 @@ public class mainController implements Initializable, controllerInterface {
     Accordion idAccordion;
 
     @FXML
-    TreeView<sprIncidentStatus> idTreeView;
+    TreeView<TSprIncidentStatus> idTreeView;
 
     @FXML
     ScrollPane idSP_Inc;
@@ -200,7 +194,7 @@ public class mainController implements Initializable, controllerInterface {
                 public void handle(ActionEvent event) {
                     log.debug(((Button) event.getSource()).getText());
                     currentPage = (new Integer(((Button) event.getSource()).getText()));
-                    refreshIncidentList(currentIncidentStatus);
+                    //TODO:  refreshIncidentList(currentIncidentStatus);
                 }
             });
             this.buttonPageList.add(b);
@@ -212,10 +206,13 @@ public class mainController implements Initializable, controllerInterface {
 
     public void refreshForm() {
         refreshTree();
-        refreshIncidentList(null);
-        refreshChart();
+        //TODO: refreshIncidentList(null);
+        //TODO: refreshChart();
     }
 
+    /**
+     * Обновляет дерево статусов
+     */
     private void refreshTree() {
         try {
             log.info("refreshTree()");
@@ -227,31 +224,33 @@ public class mainController implements Initializable, controllerInterface {
             imV.setFitHeight(16);
             imV.setFitWidth(16);
             Node rootIcon = imV;
-            TreeItem<sprIncidentStatus> rootItem = new TreeItem("Статус", rootIcon);
+            TreeItem<TSprIncidentStatus> rootItem = new TreeItem("Статус", rootIcon);
 
             rootItem.setExpanded(true);
             for (TSprIncidentStatus item : itemList) {
-
+                log.debug("item => " + item + " incCount => " + item.getTIncidentCollection().size());
+                
                 ImageView imV1 = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder_mono.png")));
                 imV1.setFitHeight(16);
                 imV1.setFitWidth(16);
                 Node nodeIcon = imV1;
 
-                TreeItem<sprIncidentStatus> node = new TreeItem(item, imV1);
+                TreeItem<TSprIncidentStatus> node = new TreeItem(item, imV1);
                 rootItem.getChildren().add(node);
             }
 
+            
+            
             idTreeView.setRoot(rootItem);
-
             idTreeView.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     log.debug(event);
-                    if (idTreeView.getSelectionModel().getSelectedItem().getValue() instanceof sprIncidentStatus) {
+                    if (idTreeView.getSelectionModel().getSelectedItem().getValue() instanceof TSprIncidentStatus) {
                         currentIncidentStatus = idTreeView.getSelectionModel().getSelectedItem().getValue();
                         refreshIncidentList(currentIncidentStatus);
                     } else {
-                        refreshIncidentList(null);
+                        //refreshIncidentList(null);
                     }
                 }
             });
@@ -260,19 +259,29 @@ public class mainController implements Initializable, controllerInterface {
         }
     }
 
-    private void refreshIncidentList(sprIncidentStatus id) {
+    /**
+     * Обновляет список инцидентов для определенного статуса
+     * @param id 
+     */
+    private void refreshIncidentList(TSprIncidentStatus item) {
         try {
             // устанавливаем начальную страницу = 1
             //this.currentPage = 1;
             log.debug("refreshIncidentList");
             idAccordion.getPanes().clear();
 
+           
+            
             // Заполняем список инцидентов
             idAccordion.getPanes().clear();
             incedentList = null;
-            log.debug(id);
-            if (id == null) {
-                incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
+            //log.debug(id);
+            if (item == null) {
+                //incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
+                 incedentList  = new LinkedList<>(item.getTIncidentCollection());
+//                incList.forEach((t) -> {
+//                    log.debug("t => " + t);
+//                });
                         //(new tIncidentDAO(dataSource)).getItemList(this.currentPage);
             } else {
                 incedentList = (new TIncidentDAO(em)).getList("TIncident.findAll", TIncident.class, null);
@@ -535,7 +544,7 @@ public class mainController implements Initializable, controllerInterface {
             control.initForm();
             stage.showAndWait();
             if (control.getFormResult() == btnStatus.btnOK) {
-                refreshIncidentList(currentIncidentStatus);
+                //TODO: refreshIncidentList(currentIncidentStatus);
                 refreshChart();
             }
         } catch (Exception e) {
@@ -544,7 +553,7 @@ public class mainController implements Initializable, controllerInterface {
     }
 
     // Вызов формы добавления инцидента
-    private void showUpdIncidentForm(javafx.stage.Window parentWnd, tIncident parentInc) {
+    private void showUpdIncidentForm(javafx.stage.Window parentWnd, TIncident parentInc) {
         try {
             log.debug(" showAddIncidentForm()");
             log.debug("URL = " + getClass().getResource("/fxml/updIncident.fxml"));
@@ -569,7 +578,7 @@ public class mainController implements Initializable, controllerInterface {
             contr1.initForm();
             stage.showAndWait();
             if (contr1.getFormResult() == btnStatus.btnOK) {
-                refreshIncidentList(currentIncidentStatus);
+                //TODO: refreshIncidentList(currentIncidentStatus);
                 refreshChart();
             };
         } catch (Exception e) {

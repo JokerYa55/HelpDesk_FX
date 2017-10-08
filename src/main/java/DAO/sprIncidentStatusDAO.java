@@ -19,9 +19,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class sprIncidentStatusDAO implements beanDAOInterface<sprIncidentStatus, Long> {
 
-    private Logger log = Logger.getLogger(sprIncidentStatusDAO.class);
-    private DataSource dataSource;
-    private JdbcTemplate jdЬcTemplate;
+    private final Logger log = Logger.getLogger(sprIncidentStatusDAO.class);
+    private final DataSource dataSource;
+    private final JdbcTemplate jdЬcTemplate;
 
     /*public sprIncidentStatusDAO() {
         this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", "postgres", "123");

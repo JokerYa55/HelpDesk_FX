@@ -13,6 +13,7 @@ import beans.sprFirm;
 import beans.sprIncidentStatus;
 import beans.sprService;
 import beans.tIncident;
+import beans_JPA.TIncident;
 import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
 import java.net.URL;
@@ -50,7 +51,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
      * Initializes the controller class.
      */
     private final Logger log = Logger.getLogger(UpdIncidentController.class);
-    private tIncident incident = null;
+    private TIncident incident = null;
     private Stage dialogStage;
     private TSprUsers currentUser;
     private DataSource dataSource;    
@@ -101,7 +102,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
         item.setFDateCreated(date);
         item.setFIncidentStatusId(((sprIncidentStatus) idCBIncidentStatus.getValue()).getId());
         item.setId(incident.getId());
-        item.setFUserId(incident.getFUserId());
+        item.setFUserId(incident.getFUserId().getId());
         log.info(item.toString());
         (new tIncidentDAO(dataSource)).updateItem(item);
         this.formResult = btnStatus.btnOK;
@@ -135,16 +136,16 @@ public class UpdIncidentController implements Initializable, controllerInterface
         return statusList;
     }
 
-    public void initFormField(tIncident inc) {
+    public void initFormField(TIncident inc) {
         this.incident = inc;
         log.info("initFormField -> " + inc.toString());
         idTFComment.setText(inc.getFComment());
-        idCBFirm.setValue(new sprFirm(inc.getFFirmId(), inc.getFFirmName()));
-        idCBService.setValue(new sprService(inc.getFServiceId(), inc.getFServiceName()));
+        idCBFirm.setValue(new sprFirm(inc.getFFirmId().getId(), inc.getFFirmId().getFName()));
+        idCBService.setValue(new sprService(inc.getFServiceId().getId(), inc.getFServiceId().getFName()));
         idDPDateCreated.setValue(getLocalDate(inc.getFDateCreated()));
-        idTFUser.setText(inc.getFUserName());
+        idTFUser.setText(inc.getFUserId().getFName());
         idDPFDate.setValue(getLocalDate(inc.getFDate()));
-        idCBIncidentStatus.setValue(new sprIncidentStatus(inc.getFIncidentStatusId(), inc.getFIncidentStatusName()));
+        idCBIncidentStatus.setValue(new sprIncidentStatus(inc.getFIncidentStatusId().getId(), inc.getFIncidentStatusId().getFName()));
     }
 
     @Override
