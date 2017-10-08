@@ -6,14 +6,11 @@
 package visualComponents;
 
 import beans_JPA.TIncident;
-import beans_JPA.TIncidentComment;
-import java.util.List;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 
 /**
  *
