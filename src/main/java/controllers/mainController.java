@@ -291,9 +291,10 @@ public class mainController implements Initializable, controllerInterface {
                 GridPane gridPane = new GridPane();
                 gridPane.setVgap(6);
                 gridPane.setHgap(4);
-                DatePicker dateIncident = new DatePicker();
+                
 
                 // добавляем дату инцидента
+                DatePicker dateIncident = new DatePicker();
                 Label labelDate = new Label("Дата инцидента");
                 //labelDate.setStyle("incident");
                 dateIncident.setValue(getLocalDate(incident.getFDate()));
