@@ -5,6 +5,8 @@
  */
 package visualComponents;
 
+import beans_JPA.TIncidentComment;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
 /**
@@ -12,5 +14,12 @@ import javafx.scene.layout.AnchorPane;
  * @author vasil
  */
 public class commentPanel extends AnchorPane {
-    
+
+    private TextArea textComment;
+    private TIncidentComment comment;
+
+    public commentPanel(TIncidentComment comment) {
+        this.comment = comment;
+    }
+
 }

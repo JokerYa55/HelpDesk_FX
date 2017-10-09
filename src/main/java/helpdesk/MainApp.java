@@ -56,7 +56,7 @@ public class MainApp extends Application {
         stage.show();
         showLoginDialog();
 
-        this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.240:5432/helpdesk", this.userName, this.userPass);
+        this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://127.0.0.1:5432/helpdesk", this.userName, this.userPass);
         log.debug(this.dataSource);
         this.mainFormController.setCurrentUser(currentUser);
         this.mainFormController.setDataSource(dataSource);

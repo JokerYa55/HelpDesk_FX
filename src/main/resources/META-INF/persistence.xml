@@ -12,10 +12,10 @@
     <class>beans_JPA.TIncidentComment</class>
     <class>beans_JPA.TSprIncidentStatus</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.1.240:5432/helpdesk"/>      
-      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>      
-      <property name="hibernate.format_sql" value="true"/>
-      <property name="hibernate.use_sql_comments" value="true"/>      
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://127.0.0.1:5432/helpdesk"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="123"/>
+      <property name="javax.persistence.jdbc.user" value="vasil"/>
     </properties>
   </persistence-unit>
 </persistence>
