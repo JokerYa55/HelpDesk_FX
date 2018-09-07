@@ -1,5 +1,7 @@
 package helpdesk;
 
+import DAO.sprUsersDAO;
+import beans.sprUser;
 import controllers.LoginFormFXMLController;
 import java.io.IOException;
 import javafx.application.Application;
@@ -9,38 +11,49 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 public class MainApp extends Application {
 
-    private Logger log = Logger.getLogger(MainApp.class);
+    private final Logger log = Logger.getLogger(MainApp.class);
     private Parent root;
     private Scene scene;
+    private String userName;
+    private String userPass;
+    private DataSource dataSource;
+    private sprUser currentUser;
+    private FXMLController mainFormController;
 
     @Override
     public void start(Stage stage) throws Exception {
         log.debug("start");
-        FXMLLoader loader = new FXMLLoader();
-        root = FXMLLoader.load(getClass().getResource("/fxml/mainForm.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainForm.fxml"));
+        root = loader.load();
+        this.mainFormController = loader.getController();
         scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setTitle("HelpDesk v. 1.0");
         stage.setScene(scene);
         //stage.setMaximized(true);
         stage.show();
-        //showDialog();
+        showLoginDialog();
+        mainFormController.setCurrentUser(currentUser);
+        this.mainFormController.setDataSource(dataSource);
+        this.mainFormController.refreshForm();
     }
 
     
-     public void showDialog() {
+     public void showLoginDialog() {
         try {
             Stage stage = new Stage();
             log.debug("showDialog");
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
-            FXMLLoader loader = new FXMLLoader();
-            Parent root = loader.load(getClass().getResource("/fxml/login.fxml"));
-            //LoginFormFXMLController controller = loader.getController();
-            //controller.setMain(this);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            Parent root = loader.load();
+            LoginFormFXMLController control = loader.getController();             
+            log.info(control);
+            control.setMain(this);
             stage.setTitle("Вход");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -48,8 +61,14 @@ public class MainApp extends Application {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(scene.getWindow());
-            stage.show();
-
+            stage.showAndWait();
+            this.dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource("jdbc:postgresql://192.168.1.250:5432/service_desk", this.userName, this.userPass);
+            log.debug(this.dataSource);
+            this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
+            
+            // Получаем текущего пользователя
+            this.currentUser = (new sprUsersDAO(dataSource)).getItemByName(userName);
+            this.mainFormController.setStatusPanelUser(this.currentUser.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,5 +84,13 @@ public class MainApp extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserPass(String userPass) {
+        this.userPass = userPass;
     }
 }

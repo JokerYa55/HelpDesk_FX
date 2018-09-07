@@ -1,3 +1,16 @@
 .button {
     -fx-font-weight: bold;
+    -fx-font: sans-serif;
 }
+
+
+.my-tree-view > .virtual-flow> .clipped-container > .sheet > .tree-cell .tree-disclosure-node .arrow {
+    -fx-background-color: red;
+}
+.my-tree-view > .virtual-flow> .clipped-container > .sheet > .tree-cell:expanded .tree-disclosure-node .arrow {
+    -fx-background-color: blue;
+}
+
+/*#idButtonNew {
+    -fx-background-image: url("/icons/Flat_Icons_21.png");
+}*/

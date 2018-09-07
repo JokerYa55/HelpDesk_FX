@@ -4,8 +4,11 @@ import DAO.sprFirmDAO;
 import DAO.sprIncidentStatusDAO;
 import DAO.tIncidentDAO;
 import beans.sprIncidentStatus;
+import beans.sprUser;
 import beans.tIncident;
+import controllers.AddIncidentController;
 import controllers.UpdIncidentController;
+import interfaces.controllerInterface;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -31,22 +34,30 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.getLocalDate;
 
-public class FXMLController implements Initializable {
+public class FXMLController implements Initializable, controllerInterface {
 
     private final Logger log = Logger.getLogger(FXMLController.class);
+    private DataSource dataSource;
+    private sprUser currentUser;
+    private Stage dialogStage;
 
     @FXML
     private Label label;
+
+    @FXML
+    private Label idLUserName;
 
     @FXML
     private MenuItem idMainMenuExit;
@@ -64,7 +75,7 @@ public class FXMLController implements Initializable {
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
         label.setText("Hello World!");
-        (new sprFirmDAO()).getItemById(Long.MIN_VALUE);
+        (new sprFirmDAO(dataSource)).getItemById(Long.MIN_VALUE);
     }
 
     @FXML
@@ -96,12 +107,12 @@ public class FXMLController implements Initializable {
             Stage stage = new Stage();
             log.debug("showDialog");
             log.debug("URL = " + getClass().getResource("/fxml/login.fxml"));
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));         
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = loader.load();
-            
+
             UpdIncidentController contr1 = loader.getController();
-            
+
             stage.setTitle("Новый инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -111,12 +122,16 @@ public class FXMLController implements Initializable {
             stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
             stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
-    private void refreshForm() {
+    public void setStatusPanelUser(String userName) {
+        idLUserName.setText(userName);
+    }
+
+    public void refreshForm() {
         refreshTree();
         refreshIncidentList(null);
     }
@@ -125,23 +140,50 @@ public class FXMLController implements Initializable {
         try {
             log.info("refreshTree()");
             //idTreeView.getRoot().getChildren().clear();
-            List<sprIncidentStatus> itemList = (new sprIncidentStatusDAO()).getItemList();
-            TreeItem<sprIncidentStatus> rootItem = new TreeItem(null);
+            List<sprIncidentStatus> itemList = (new sprIncidentStatusDAO(dataSource)).getItemList();
+
+            ImageView imV = new ImageView(new Image(getClass().getResourceAsStream("/icons/open_mono.png")));
+            imV.setFitHeight(16);
+            imV.setFitWidth(16);
+            Node rootIcon = imV;
+            TreeItem<sprIncidentStatus> rootItem = new TreeItem("Статус", rootIcon);
+
             rootItem.setExpanded(true);
             for (sprIncidentStatus item : itemList) {
-                TreeItem<sprIncidentStatus> node = new TreeItem(item);
+
+                ImageView imV1 = new ImageView(new Image(getClass().getResourceAsStream("/icons/folder_mono.png")));
+                imV1.setFitHeight(16);
+                imV1.setFitWidth(16);
+                Node nodeIcon = imV1;
+
+                TreeItem<sprIncidentStatus> node = new TreeItem(item, imV1);
                 rootItem.getChildren().add(node);
             }
 
             idTreeView.setRoot(rootItem);
-            idTreeView.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            idTreeView.setOnMousePressed(
+                    new EventHandler<MouseEvent>() {
                 @Override
-                public void handle(MouseEvent event) {
+                public void handle(MouseEvent event
+                ) {
                     log.debug(event);
-                    //log.debug(idTreeView.getSelectionModel().getSelectedItem().getValue());                    
-                    refreshIncidentList(idTreeView.getSelectionModel().getSelectedItem().getValue());
+                    //log.debug(idTreeView.getSelectionModel().getSelectedItem().getValue());
+                    /*ImageView imV = new ImageView(new Image(getClass().getResourceAsStream("/icons/open_mono.png")));
+                    imV.setFitHeight(16);
+                    imV.setFitWidth(16);
+                    idTreeView.getSelectionModel().getSelectedItem().setGraphic(imV);*/
+                    //idTreeView.getSelectionModel().getSelectedItem().
+                    //log.debug(idTreeView.getControlCssMetaData());
+
+                    if (idTreeView.getSelectionModel().getSelectedItem().getValue() instanceof sprIncidentStatus) {
+                        refreshIncidentList(idTreeView.getSelectionModel().getSelectedItem().getValue());
+                    } else {
+                        refreshIncidentList(null);
+                    }
                 }
-            });
+            }
+            );
         } catch (Exception e) {
             log.error(e);
         }
@@ -149,15 +191,17 @@ public class FXMLController implements Initializable {
 
     private void refreshIncidentList(sprIncidentStatus id) {
         try {
+            log.debug("refreshIncidentList");
             idAccordion.getPanes().clear();
             System.out.println("refreshIncidentList()");
             // Заполняем список инцидентов
             idAccordion.getPanes().clear();
             List<tIncident> incedentList = null;
+            log.debug(id);
             if (id == null) {
-                incedentList = (new tIncidentDAO()).getItemList();
+                incedentList = (new tIncidentDAO(dataSource)).getItemList();
             } else {
-                incedentList = (new tIncidentDAO()).getItemListByStatus(id.getId());
+                incedentList = (new tIncidentDAO(dataSource)).getItemListByStatus(id.getId());
             }
             for (tIncident incident : incedentList) {
                 // создаем панель с информацией об инциденте
@@ -233,7 +277,7 @@ public class FXMLController implements Initializable {
                         Optional<ButtonType> result = alertForm.showAndWait();
                         if (result.get() == ButtonType.OK) {
                             log.info(result.get());
-                            (new tIncidentDAO()).deleteItem(incident);
+                            (new tIncidentDAO(dataSource)).deleteItem(incident);
                         } else {
                             log.info(result.get());
                         }
@@ -247,9 +291,9 @@ public class FXMLController implements Initializable {
                 btnEdit.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                       log.info(incident);
-                       //((Node)event.getSource()).
-                       showUpdIncidentForm(((Node)event.getSource()).getScene().getWindow(), incident);
+                        log.info(incident);
+                        //((Node)event.getSource()).
+                        showUpdIncidentForm(((Node) event.getSource()).getScene().getWindow(), incident);
                     }
                 });
                 hBox.getChildren().add(btnEdit);
@@ -264,7 +308,6 @@ public class FXMLController implements Initializable {
                     log.debug(incident);
                 });
                 idAccordion.getPanes().add(tp);
-
             }
         } catch (Exception e) {
             log.error(e);
@@ -291,7 +334,9 @@ public class FXMLController implements Initializable {
             Stage stage = new Stage();
             log.debug(" showAddIncidentForm()");
             log.debug("URL = " + getClass().getResource("/fxml/addIncident.fxml"));
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/addIncident.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addIncident.fxml"));
+            Parent root = loader.load();
+            AddIncidentController control = loader.getController();
             stage.setTitle("Новый инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -299,10 +344,14 @@ public class FXMLController implements Initializable {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+            control.setDialogStage(stage);
+            control.setCurrentUser(currentUser);
+            control.setDataSource(dataSource);
+            control.setDialogStage(stage);
+            control.initForm();
             stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
@@ -317,9 +366,9 @@ public class FXMLController implements Initializable {
             UpdIncidentController contr1 = loader.getController();
             log.debug(contr1);
             //contr1.setIncident(parentInc);
-            
+
             contr1.initFormField(parentInc);
-            
+
             stage.setTitle("Редактировать инцидент");
             stage.setMinHeight(150);
             stage.setMinWidth(300);
@@ -327,17 +376,42 @@ public class FXMLController implements Initializable {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(parentWnd);
+
+            contr1.setDialogStage(stage);
+            contr1.setCurrentUser(currentUser);
+            contr1.setDataSource(dataSource);
+            contr1.initForm();
             stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        refreshForm();
+        log.debug("initialize");
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public void setCurrentUser(sprUser currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    @Override
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    @Override
+    public void initForm() {
+        log.debug("initForm");
+        idTreeView.getStyleClass().add("my-tree-view");
     }
 }
-

@@ -6,11 +6,15 @@ package controllers;
  * and open the template in the editor.
  */
 import DAO.sprFirmDAO;
+import DAO.sprIncidentStatusDAO;
 import DAO.sprServiceDAO;
 import DAO.tIncidentDAO;
 import beans.sprFirm;
+import beans.sprIncidentStatus;
 import beans.sprService;
+import beans.sprUser;
 import beans.tIncident;
+import interfaces.controllerInterface;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,21 +31,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.NOW_LOCAL_DATE;
+import static util.utils.getLocalDate;
 
 /**
  * FXML Controller class
  *
  * @author vasil
  */
-public class UpdIncidentController implements Initializable {
+public class UpdIncidentController implements Initializable, controllerInterface {
 
     /**
      * Initializes the controller class.
      */
     private final Logger log = Logger.getLogger(UpdIncidentController.class);
-    private tIncident incident;
+    private tIncident incident = null;
+    private Stage dialogStage;
+    private sprUser currentUser;
+    private DataSource dataSource;
 
     @FXML
     DatePicker idDPFDate;
@@ -68,9 +78,12 @@ public class UpdIncidentController implements Initializable {
     Button idBtnCancel;
 
     @FXML
-    public void btnSaveClick(ActionEvent actionEvent) {
+    ComboBox idCBIncidentStatus;
+
+    @FXML
+    public void btnUpdClick(ActionEvent actionEvent) {
         // Нажатие на кнопку сохранить
-        log.info("btnSaveClick -> " + actionEvent);
+        log.info("btnUpdClick -> " + actionEvent);
         tIncident item = new tIncident();
         item.setFComment(idTFComment.getText());
 
@@ -82,20 +95,17 @@ public class UpdIncidentController implements Initializable {
         item.setFServiceId(((sprService) idCBService.getSelectionModel().getSelectedItem()).getId());
         item.setFComment(idTFComment.getText());
         item.setFDateCreated(date);
-        //item.setFUserId(((sprUser) ));
+        item.setFIncidentStatusId(((sprIncidentStatus) idCBIncidentStatus.getValue()).getId());
+        item.setId(incident.getId());
+        item.setFUserId(incident.getFUserId());
         log.info(item.toString());
-        (new tIncidentDAO()).addItem(item);
-    }
-
-    @FXML
-    public void btnUpdClick(ActionEvent actionEvent) {
-        log.info("btnUpdClick -> " + actionEvent);
-        
+        (new tIncidentDAO(dataSource)).updateItem(item);
+        dialogStage.close();
     }
 
     private ObservableList<sprFirm> getFirmList() {
         ObservableList<sprFirm> firmList = FXCollections.observableArrayList();
-        List<sprFirm> tList = (new sprFirmDAO().getItemList());
+        List<sprFirm> tList = (new sprFirmDAO(dataSource).getItemList());
         tList.forEach((item) -> {
             firmList.add(item);
         });
@@ -104,40 +114,72 @@ public class UpdIncidentController implements Initializable {
 
     private ObservableList<sprService> getServiceList() {
         ObservableList<sprService> serviceList = FXCollections.observableArrayList();
-        List<sprService> tList = (new sprServiceDAO().getItemList());
+        List<sprService> tList = (new sprServiceDAO(dataSource).getItemList());
         tList.forEach((item) -> {
             serviceList.add(item);
         });
         return serviceList;
     }
 
-    public void initFormField(tIncident inc){
+    private ObservableList<sprIncidentStatus> getStatusList() {
+        ObservableList<sprIncidentStatus> statusList = FXCollections.observableArrayList();
+        List<sprIncidentStatus> tList = (new sprIncidentStatusDAO(dataSource).getItemList());
+        tList.forEach((item) -> {
+            statusList.add(item);
+        });
+        return statusList;
+    }
+
+    public void initFormField(tIncident inc) {
+        this.incident = inc;
         log.info("initFormField -> " + inc.toString());
         idTFComment.setText(inc.getFComment());
+        idCBFirm.setValue(new sprFirm(inc.getFFirmId(), inc.getFFirmName()));
+        idCBService.setValue(new sprService(inc.getFServiceId(), inc.getFServiceName()));
+        idDPDateCreated.setValue(getLocalDate(inc.getFDateCreated()));
+        idTFUser.setText(inc.getFUserName());
+        idDPFDate.setValue(getLocalDate(inc.getFDate()));
+        idCBIncidentStatus.setValue(new sprIncidentStatus(inc.getFIncidentStatusId(), inc.getFIncidentStatusName()));
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        //log.info("initialize -> " + incident.toString());
+        
+    }
+
+    public sprUser getCurrentUser() {
+        return currentUser;
+    }
+
+    @Override
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    @Override
+    public void setCurrentUser(sprUser currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public void initForm() {
         try {
+            log.info("initialize -> ");
             idDPFDate.setValue(NOW_LOCAL_DATE());
             idCBFirm.getItems().addAll(getFirmList());
             idCBService.getItems().addAll(getServiceList());
             idDPDateCreated.setValue(NOW_LOCAL_DATE());
             idTFUser.setText("Test");
-
+            idCBIncidentStatus.getItems().addAll(getStatusList());
         } catch (Exception e) {
             log.error(e);
         }
-    }
-
-    public tIncident getIncident() {
-        return incident;
-    }
-
-    public void setIncident(tIncident incident) {
-        this.incident = incident;
     }
 
 }
