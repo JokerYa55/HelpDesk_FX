@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
@@ -8,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="891.0" prefWidth="1240.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="helpdesk.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="891.0" prefWidth="1240.0" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.mainController">
     <children>
         <ToolBar layoutY="25.0" prefHeight="50.0" prefWidth="1240.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
             <items>
@@ -42,7 +44,7 @@
                 <Blend />
             </effect>
         </ToolBar>
-        <MenuBar layoutX="356.0" layoutY="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <MenuBar fx:id="idMBMainMenu" layoutX="356.0" layoutY="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Файл">
                     <items>
@@ -54,6 +56,18 @@
                         <MenuItem mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Справочники">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#showSprFirmForm" text="Справочник фирм" />
+                  <MenuItem mnemonicParsing="false" onAction="#showSprClientForm" text="Справочник клиентов" />
+                  <MenuItem mnemonicParsing="false" onAction="#showSprServiceForm" text="Справочник услуг" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Отчеты">
+              <items>
+                <MenuItem fx:id="idMIRepInc" mnemonicParsing="false" onAction="#handleMainMenuRepInc" text="Инциденты" />
+              </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem fx:id="idMIAbout" mnemonicParsing="false" onAction="#handleMainMenuAbout" text="About" />
@@ -64,21 +78,40 @@
         <SplitPane dividerPositions="0.29797979797979796" layoutX="230.0" layoutY="60.0" prefHeight="761.0" prefWidth="1240.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                    <children>
-                        <TreeView fx:id="idTreeView" prefHeight="282.0" prefWidth="504.0" styleClass="my-tree-view" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <root>
-                               <TreeItem value="Test" />
-                               <TreeItem value="Test1" />
-                           </root>
-                        </TreeView>
-                    </children>
+               <children>
+                  <SplitPane dividerPositions="0.5" layoutX="134.0" layoutY="172.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <TreeView fx:id="idTreeView" prefHeight="282.0" prefWidth="283.0" styleClass="my-tree-view" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <root>
+                                   
+                                 </root>
+                              </TreeView>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <PieChart fx:id="idPCAll" layoutX="-78.0" layoutY="-22.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children></AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <children>
-                                <Accordion fx:id="idAccordion" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                            </children>
+                        <AnchorPane fx:id="idAPRight" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ScrollPane fx:id="idSP_Inc" layoutX="121.0" layoutY="141.0" prefHeight="714.0" prefWidth="864.0" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                           <content>
+                              <Accordion fx:id="idAccordion">
+                                 <cursor>
+                                    <Cursor fx:constant="S_RESIZE" />
+                                 </cursor></Accordion>
+                           </content>
+                        </ScrollPane>
+                        <HBox fx:id="HBNumButton" layoutX="14.0" layoutY="719.0" prefHeight="40.0" prefWidth="866.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                     </children>
                         </AnchorPane>
                     </children>
                 </AnchorPane>

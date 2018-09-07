@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SprServiceController">
+    <stylesheets>
+        <URL value="@/styles/sprservice.css" />
+    </stylesheets>
+   <children>
+      <TableView fx:id="idTVMainData" layoutX="24.0" layoutY="40.0" prefHeight="360.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+        <columns>
+          <TableColumn fx:id="idTCId" prefWidth="142.0" text="Уникальный код" />
+          <TableColumn fx:id="idTCServiceName" prefWidth="455.0" text="Наименование" />
+        </columns>
+      </TableView>
+      <ToolBar layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnAddClick" text="Добавить" />
+            <Button fx:id="btnEdit" mnemonicParsing="false" text="Редактировать" />
+            <Button fx:id="btnDel" mnemonicParsing="false" text="Удалить" />
+        </items>
+      </ToolBar>
+   </children>
+</AnchorPane>

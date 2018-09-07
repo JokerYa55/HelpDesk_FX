@@ -7,11 +7,15 @@ package DAO;
 
 import beans.sprService;
 import interfaces.beanDAOInterface;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 /**
  *
@@ -62,7 +66,19 @@ public class sprServiceDAO implements beanDAOInterface<sprService, Long> {
 
     @Override
     public long addItem(sprService Item) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         try {
+            KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+            this.jdЬcTemplate.update((Connection conn) -> {
+                PreparedStatement ps = conn.prepareStatement("INSERT INTO public.t_spr_service(f_name) VALUES (?);", new String[]{"id"});
+                ps.setString(1, Item.getName());
+                return ps;
+            }, generatedKeyHolder);
+            log.info(generatedKeyHolder.getKey().longValue());
+            return generatedKeyHolder.getKey() == null ? null : generatedKeyHolder.getKey().intValue();
+        } catch (Exception e) {
+            log.error(e);
+            return -1;
+        }
     }
 
     @Override

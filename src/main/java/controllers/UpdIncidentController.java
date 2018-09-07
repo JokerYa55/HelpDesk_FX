@@ -12,8 +12,9 @@ import DAO.tIncidentDAO;
 import beans.sprFirm;
 import beans.sprIncidentStatus;
 import beans.sprService;
-import beans.sprUser;
 import beans.tIncident;
+import beans_JPA.TIncident;
+import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.time.Instant;
@@ -32,9 +33,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import static util.utils.NOW_LOCAL_DATE;
+import util.utils.btnStatus;
 import static util.utils.getLocalDate;
 
 /**
@@ -48,10 +51,12 @@ public class UpdIncidentController implements Initializable, controllerInterface
      * Initializes the controller class.
      */
     private final Logger log = Logger.getLogger(UpdIncidentController.class);
-    private tIncident incident = null;
+    private TIncident incident = null;
     private Stage dialogStage;
-    private sprUser currentUser;
-    private DataSource dataSource;
+    private TSprUsers currentUser;
+    private DataSource dataSource;    
+    private btnStatus formResult = btnStatus.btnCancel;
+    private EntityManager em;
 
     @FXML
     DatePicker idDPFDate;
@@ -97,9 +102,10 @@ public class UpdIncidentController implements Initializable, controllerInterface
         item.setFDateCreated(date);
         item.setFIncidentStatusId(((sprIncidentStatus) idCBIncidentStatus.getValue()).getId());
         item.setId(incident.getId());
-        item.setFUserId(incident.getFUserId());
+        item.setFUserId(incident.getFUserId().getId());
         log.info(item.toString());
         (new tIncidentDAO(dataSource)).updateItem(item);
+        this.formResult = btnStatus.btnOK;
         dialogStage.close();
     }
 
@@ -130,25 +136,25 @@ public class UpdIncidentController implements Initializable, controllerInterface
         return statusList;
     }
 
-    public void initFormField(tIncident inc) {
+    public void initFormField(TIncident inc) {
         this.incident = inc;
         log.info("initFormField -> " + inc.toString());
         idTFComment.setText(inc.getFComment());
-        idCBFirm.setValue(new sprFirm(inc.getFFirmId(), inc.getFFirmName()));
-        idCBService.setValue(new sprService(inc.getFServiceId(), inc.getFServiceName()));
+        idCBFirm.setValue(new sprFirm(inc.getFFirmId().getId(), inc.getFFirmId().getFName()));
+        idCBService.setValue(new sprService(inc.getFServiceId().getId(), inc.getFServiceId().getFName()));
         idDPDateCreated.setValue(getLocalDate(inc.getFDateCreated()));
-        idTFUser.setText(inc.getFUserName());
+        idTFUser.setText(inc.getFUserId().getFName());
         idDPFDate.setValue(getLocalDate(inc.getFDate()));
-        idCBIncidentStatus.setValue(new sprIncidentStatus(inc.getFIncidentStatusId(), inc.getFIncidentStatusName()));
+        idCBIncidentStatus.setValue(new sprIncidentStatus(inc.getFIncidentStatusId().getId(), inc.getFIncidentStatusId().getFName()));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
+
     }
 
-    public sprUser getCurrentUser() {
+    public TSprUsers getCurrentUser() {
         return currentUser;
     }
 
@@ -158,7 +164,7 @@ public class UpdIncidentController implements Initializable, controllerInterface
     }
 
     @Override
-    public void setCurrentUser(sprUser currentUser) {
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 
@@ -180,6 +186,28 @@ public class UpdIncidentController implements Initializable, controllerInterface
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+//    @Override
+//    public formLocator showDialog(DataSource dataSource, Stage stage, Parent root, String windowCaption) {
+//        try (formLocator res = new formLocator()) {
+//            
+//            
+//            
+//            return res;
+//        } catch (Exception ex) {
+//            log.error(ex);
+//        }
+//        return null;
+//    }
+
+    public btnStatus getFormResult() {
+        return formResult;
+    }
+
+    @Override
+    public void setEM(EntityManager em) {
+        this.em = em;
     }
 
 }

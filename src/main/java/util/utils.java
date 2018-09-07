@@ -19,6 +19,10 @@ import java.util.Date;
  */
 public class utils {
 
+    public enum btnStatus {
+        btnOK, btnCancel
+    };
+
     public static final LocalDate NOW_LOCAL_DATE() {
         String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -33,13 +37,12 @@ public class utils {
         res = LocalDate.parse(date, formatter);
         return res;
     }
-    
-    public static Date localDateToDate(LocalDate date)
-    {
+
+    public static Date localDateToDate(LocalDate date) {
         Date tDate = null;
         LocalDate localDate = date;
         Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
         tDate = Date.from(instant);
-        return tDate; 
+        return tDate;
     }
 }

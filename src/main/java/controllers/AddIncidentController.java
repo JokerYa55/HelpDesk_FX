@@ -10,8 +10,8 @@ import DAO.sprServiceDAO;
 import DAO.tIncidentDAO;
 import beans.sprFirm;
 import beans.sprService;
-import beans.sprUser;
 import beans.tIncident;
+import beans_JPA.TSprUsers;
 import interfaces.controllerInterface;
 import java.net.URL;
 import java.time.Instant;
@@ -30,8 +30,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
+import util.utils;
 import static util.utils.NOW_LOCAL_DATE;
 
 /**
@@ -46,8 +48,10 @@ public class AddIncidentController implements Initializable, controllerInterface
      */
     private final Logger log = Logger.getLogger(AddIncidentController.class);
     private Stage dialogStage;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private DataSource dataSource;
+    private utils.btnStatus formResult = utils.btnStatus.btnCancel;
+    private EntityManager em;
 
     @FXML
     DatePicker idDPFDate;
@@ -92,6 +96,7 @@ public class AddIncidentController implements Initializable, controllerInterface
         item.setFIncidentStatusId(new Long(1));
         log.info(item.toString());
         (new tIncidentDAO(dataSource)).addItem(item);
+        formResult = utils.btnStatus.btnOK;
         this.dialogStage.close();
     }
 
@@ -127,11 +132,18 @@ public class AddIncidentController implements Initializable, controllerInterface
 
     }
 
+    @Override
+    public void setEM(EntityManager em) {
+        this.em = em;
+    }
+
+    @Override
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
 
-    public void setCurrentUser(sprUser currentUser) {
+    @Override
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 
@@ -151,6 +163,10 @@ public class AddIncidentController implements Initializable, controllerInterface
         } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    public utils.btnStatus getFormResult() {
+        return formResult;
     }
 
 }

@@ -6,8 +6,10 @@
 package controllers;
 
 import beans.sprUser;
+import beans_JPA.TSprUsers;
 import helpdesk.MainApp;
 import interfaces.controllerInterface;
+import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -19,9 +21,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
+import util.appPropertys;
 
 /**
  * FXML Controller class
@@ -36,8 +42,9 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
     public MainApp main;
     private Stage dialogStage;
     private DataSource dataSource;
-    private sprUser currentUser;
+    private TSprUsers currentUser;
     private final Logger log = Logger.getLogger(LoginFormFXMLController.class);
+    private EntityManager em;
 
     @FXML
     Button btnClose;
@@ -59,7 +66,12 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
             this.main.setUserName(idTFLogin.getText());
             this.main.setUserPass(idTFPassword.getText());
             Stage stage = (Stage) btnOk.getScene().getWindow();
+            File filename = new File(System.getProperty("user.home") + "/helpdesk.property");
+            appPropertys prop = new appPropertys(filename);
+            prop.getProps().setProperty("login", idTFLogin.getText());
+            prop.save();
             stage.close();
+
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setHeaderText("Поля имя и пароль не могут быть пустыми!");
@@ -86,9 +98,24 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
 
     }
 
+    @FXML
+    private void formKeyPressed(KeyEvent key) {
+        try {
+            log.info("formKeyPressed = " + key);
+            if (key.getCode() == KeyCode.ENTER) {
+                okDialog(null);
+            }
+        } catch (Exception e) {
+            log.debug(e);
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO        
+        File filename = new File(System.getProperty("user.home") + "/helpdesk.property");
+        appPropertys prop = new appPropertys(filename);
+        idTFLogin.setText(prop.getProps().getProperty("login"));        
     }
 
     public void setMain(MainApp main) {
@@ -110,13 +137,18 @@ public class LoginFormFXMLController implements Initializable, controllerInterfa
     }
 
     @Override
-    public void setCurrentUser(sprUser currentUser) {
+    public void setCurrentUser(TSprUsers currentUser) {
         this.currentUser = currentUser;
     }
 
     @Override
     public void initForm() {
         log.debug("initForm");
+    }
+
+    @Override
+    public void setEM(EntityManager em) {
+        this.em = em;
     }
 
 }
